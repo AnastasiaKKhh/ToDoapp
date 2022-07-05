@@ -63,9 +63,6 @@ function renderTasks(array) {
 
   })
 
-  // doneBtns.map(item => {
-
-  //   item.addEventListener('click', function () {
   document.querySelectorAll('.donebtn').forEach(item => {
     item.addEventListener('click', event => {
       item.classList.toggle('done')
