@@ -15,8 +15,8 @@ body {
   border: 1px solid #868686;
   box-shadow: 28px 28px 50px -4px rgba(2, 12, 66, 0.1);
   border-radius: 25px;
-  padding: 38px 37px;
-  margin: 5% auto;
+  padding: 38px 37px 20px;
+  margin: 1% auto 0;
 }
 
 .list_body_content {
@@ -194,6 +194,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 35px;
 }
 
 #pagination li {
@@ -201,7 +202,6 @@ h1 {
   padding: 3px 22px;
   border: 0.5px solid #292929;
   border-radius: 3px;
-  margin-top: 50px;
 }
 
 #pagination li + li {
@@ -232,7 +232,7 @@ h1 {
   cursor: pointer;
   max-width: 100%;
   margin-left: auto;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .cleanbtn_icon {
@@ -244,6 +244,5 @@ h1 {
 }
 
 .cleanbtn:hover svg {
-  fill: #814cc5
+  fill: #814cc5;
 }
-
