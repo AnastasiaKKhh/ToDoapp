@@ -64,6 +64,7 @@ addnewtask.onclick = createTask;
 function renderTasks(array) {
   taskList.innerHTML = ''
   array.map(item => {
+    console.log(item.main)
     taskList.innerHTML += item.main;
     if (item.isDone === true) {
       document.querySelectorAll(".donebtn").forEach(btn => {
@@ -119,7 +120,7 @@ function createTask() {
     return TASKS
   }
   renderTasks(TASKS);
-
+  deleteTask()
   return TASKS
 }
 
@@ -153,22 +154,10 @@ pages.forEach(function (page) {
       let start = (pageNum - 1) * notesOnPage;
       let end = start + notesOnPage
       let notes = TASKS.slice(start, end);
-      taskList.innerHTML = "";
-      for (let note of notes) {
-        let li = document.createElement('li');
-        li.innerHTML = note.main
-        taskList.appendChild(li);
-        console.log(note);
-        if (note.isDone === true) {
-          document.querySelectorAll(".donebtn").forEach(btn => {
-            if (btn.id == note.id) {
-              btn.classList.add('done');
-            }
+      console.log(TASKS)
 
-          })
-        }
+      renderTasks(notes)
 
-      }
       deleteTask();
     });
 
@@ -180,7 +169,6 @@ clearBtn.addEventListener('click', clearList => {
   taskList.innerHTML = "";
   TASKS = []
 })
-
 
 
 
