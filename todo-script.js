@@ -10,108 +10,106 @@ dates.forEach((date) => {
   date.innerHTML = day + "/" + month + "/" + year;
 });
 
-let filterValue = 'All'
+let filterValue = "All";
 let TASKS = [];
 
 const taskInput = document.querySelector(".create_new_task_body");
 const addnewtask = document.querySelector(".add_new_task_btn");
 const taskList = document.querySelector(".tasks");
 
-const filters = document.querySelectorAll(".filters_by_state");
+let noTasks = () => {
+  if (TASKS.length === 0) {
+    taskList.innerHTML = "There are no tasks for today!";
+  }
+};
 
+noTasks();
+
+const filters = document.querySelectorAll(".filters_by_state");
 
 filters.forEach(function Foo(filter) {
   filter.addEventListener("click", function () {
     let thisfilter = filter;
-    filterValue = filter.innerHTML
-    if (filterValue === 'Done') {
-      const tasks = TASKS.filter(item => item.isDone)
+    filterValue = filter.innerHTML;
+    if (filterValue === "Done") {
+      const tasks = TASKS.filter((item) => item.isDone);
       renderTasks(tasks);
-      addnewtask.onclick = null
+      addnewtask.onclick = null;
     }
-    if (filterValue === 'Undone') {
-      const tasks = TASKS.filter(item => !item.isDone)
-      renderTasks(tasks)
+    if (filterValue === "Undone") {
+      const tasks = TASKS.filter((item) => !item.isDone);
+      renderTasks(tasks);
       addnewtask.onclick = createTask;
     }
-    if (filterValue === 'All') {
-      renderTasks(TASKS)
+    if (filterValue === "All") {
+      renderTasks(TASKS);
       addnewtask.onclick = createTask;
     }
     filters.forEach(function (filter) {
       filter.classList.remove("active_filter");
       thisfilter.classList.add("active_filter");
     });
-    deleteTask()
+    deleteTask();
+    noTasks();
   });
-
 });
 
 const arrows = document.querySelectorAll(".arrow");
 
 arrows.forEach(function (arrow) {
   arrow.addEventListener("click", function () {
-    let thisarrow = arrow;
 
     straightSortDate = !straightSortDate;
 
     arrows.forEach(function (arrow) {
       arrow.classList.toggle("active_arrow");
     });
-    renderTasks(TASKS)
+    renderTasks(TASKS);
   });
 });
 
 addnewtask.onclick = createTask;
 
-
 const renderTasks = (array) => {
-
+  noTasks();
   let dateSortedTasks = straightSortDate ? array : array.slice().reverse();
   let toRender = dateSortedTasks;
-  if (filterValue === 'Done') {
-    toRender = dateSortedTasks.filter(item => item.isDone)
+  if (filterValue === "Done") {
+    toRender = dateSortedTasks.filter((item) => item.isDone);
   }
 
-  if (filterValue === 'Undone') {
-    toRender = dateSortedTasks.filter(item => !item.isDone)
+  if (filterValue === "Undone") {
+    toRender = dateSortedTasks.filter((item) => !item.isDone);
   }
-  console.log(array.map(item => item.id))
-
-  console.log(straightSortDate)
 
   let start = (pageNum - 1) * notesOnPage;
-  let end = start + notesOnPage
+  let end = start + notesOnPage;
   let notes = toRender.slice(start, end);
-  console.log('Pagenum: ', pageNum)
-  taskList.innerHTML = ''
-  notes.map(item => {
-    // console.log(item.main)
+  taskList.innerHTML = "";
+  notes.map((item) => {
     taskList.innerHTML += item.main;
     if (item.isDone === true) {
-      document.querySelectorAll(".donebtn").forEach(btn => {
+      document.querySelectorAll(".donebtn").forEach((btn) => {
         if (btn.id == item.id) {
-          btn.classList.add('done');
+          btn.classList.add("done");
         }
-
-      })
+      });
     }
-  })
+  });
 
-  const checkStatus = document.querySelectorAll(".donebtn").forEach(item => {
-    item.addEventListener('click', event => {
-      item.classList.toggle('done')
+  const checkStatus = document.querySelectorAll(".donebtn").forEach((item) => {
+    item.addEventListener("click", (event) => {
+      item.classList.toggle("done");
       TASKS.forEach((task) => {
-
         if (item.id == task.id) {
-          task.isDone = !task.isDone
+          task.isDone = !task.isDone;
         }
-      })
-      renderTasks(TASKS)
-
-    })
-  })
-}
+      });
+      renderTasks(TASKS);
+      deleteTask();
+    });
+  });
+};
 
 function createTask() {
   const id = new Date().getTime();
@@ -137,17 +135,16 @@ function createTask() {
         </div>  
     </li>
         `,
-
-  }
+  };
   TASKS.push(newTask);
   taskInput.value = "";
   if (TASKS.length > 25) {
-    alert("Это лимит")
-    return TASKS
+    alert("You archive tasks' limit. Delete some tasks to add new one");
+    return TASKS;
   }
   renderTasks(TASKS);
-  deleteTask()
-  return TASKS
+  deleteTask();
+  return TASKS;
 }
 
 function deleteTask() {
@@ -158,39 +155,34 @@ function deleteTask() {
       task.remove();
       for (let j = 0; j < TASKS.length; j++) {
         if (i === j) {
-          TASKS.splice(i, 1)
+          TASKS.splice(i, 1);
         }
       }
+      noTasks();
     };
-  };
+  }
 }
 
-let pages = document.querySelectorAll('#pagination li');
-
+let pages = document.querySelectorAll("#pagination li");
 
 pages.forEach(function (page) {
-
   page.addEventListener("click", function () {
-
     let active = document.querySelector("#pagination li.active_page");
-    active.classList.remove('active_page')
+    active.classList.remove("active_page");
 
-    this.classList.add("active_page")
+    this.classList.add("active_page");
     pageNum = +this.innerHTML;
 
-
-    renderTasks(TASKS)
+    renderTasks(TASKS);
 
     deleteTask();
   });
+});
 
-
-})
-
-clearBtn = document.getElementById('clean');
-clearBtn.addEventListener('click', clearList => {
+clearBtn = document.getElementById("clean");
+clearBtn.addEventListener("click", (clearList) => {
   taskList.innerHTML = "";
-  TASKS = []
-})
+  TASKS = [];
+});
 
 
