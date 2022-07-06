@@ -115,7 +115,7 @@ function createTask() {
 
   }
   TASKS.push(newTask);
-   if( TASKS.length> 5) {
+  if( TASKS.length> 5) {
     return TASKS
   }
   renderTasks(TASKS);
@@ -156,13 +156,13 @@ function paginationToDo() {
       let start = (pageNum - 1) * notesOnPage;
       let end = start + notesOnPage
       let notes = TASKS.slice(start, end);
-
       taskList.innerHTML = "";
       for (let note of notes) {
         let li = document.createElement('li');
         li.innerHTML = note.main
-        taskList.appendChild(li)
+        taskList.appendChild(li);
       }
+      deleteTask()
     });
   }
 }
@@ -172,7 +172,6 @@ clearBtn.addEventListener('click', clearList => {
   taskList.innerHTML = "";
   TASKS = []
 })
-
 
 
 
