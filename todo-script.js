@@ -50,6 +50,7 @@ arrows.forEach(function (arrow) {
       arrow.classList.remove("active_arrow");
       thisarrow.classList.add("active_arrow");
     });
+    taskList.classList.toggle("reversed")
   });
 });
 
