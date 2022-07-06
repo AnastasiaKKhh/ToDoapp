@@ -115,6 +115,9 @@ function createTask() {
 
   }
   TASKS.push(newTask);
+   if( TASKS.length> 5) {
+    return TASKS
+  }
   renderTasks(TASKS);
 
   deleteTask();
