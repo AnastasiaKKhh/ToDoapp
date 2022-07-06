@@ -48,16 +48,6 @@ filters.forEach(function Foo(filter) {
 });
 
 const arrows = document.querySelectorAll(".arrow");
-// arrows[0].addEventListener("click", function () {
-//   straightSortDate = !straightSortDate;
-
-//   arrows.forEach(function (arrow) {
-//     arrow.classList.toggle("active_arrow");
-//   });
-//   renderTasks(TASKS)
-// });
-
-
 
 arrows.forEach(function (arrow) {
   arrow.addEventListener("click", function () {
@@ -150,6 +140,7 @@ function createTask() {
 
   }
   TASKS.push(newTask);
+  taskInput.value = "";
   if (TASKS.length > 25) {
     alert("Это лимит")
     return TASKS
