@@ -117,6 +117,8 @@ const renderTasks = (array) => {
           task.isDone = !task.isDone
         }
       })
+      renderTasks(TASKS)
+
     })
   })
 }
@@ -199,6 +201,5 @@ clearBtn.addEventListener('click', clearList => {
   taskList.innerHTML = "";
   TASKS = []
 })
-
 
 
