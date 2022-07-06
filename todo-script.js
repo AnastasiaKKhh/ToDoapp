@@ -115,13 +115,10 @@ function createTask() {
 
   }
   TASKS.push(newTask);
-  if( TASKS.length> 5) {
+  if (TASKS.length > 5) {
     return TASKS
   }
   renderTasks(TASKS);
-
-  deleteTask();
-  paginationToDo();
 
   return TASKS
 }
@@ -141,11 +138,11 @@ function deleteTask() {
   };
 }
 
-function paginationToDo() {
-  let pages = document.querySelectorAll('#pagination li');
-  let notesOnPage = 5;
-
-  for (let page of pages) {
+let pages = document.querySelectorAll('#pagination li');
+let notesOnPage = 5;
+pages.forEach(function (page) {
+  page.addEventListener("click", () => {
+    let notesOnPage = 5;
     page.addEventListener("click", function () {
 
       let active = document.querySelector("#pagination li.active_page");
@@ -161,17 +158,29 @@ function paginationToDo() {
         let li = document.createElement('li');
         li.innerHTML = note.main
         taskList.appendChild(li);
+        console.log(note);
+        if (note.isDone === true) {
+          document.querySelectorAll(".donebtn").forEach(btn => {
+            if (btn.id == note.id) {
+              btn.classList.add('done');
+            }
+
+          })
+        }
+
       }
-      deleteTask()
+      deleteTask();
     });
-  }
-}
+
+  })
+})
 
 clearBtn = document.getElementById('clean');
 clearBtn.addEventListener('click', clearList => {
   taskList.innerHTML = "";
   TASKS = []
 })
+
 
 
 
