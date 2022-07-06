@@ -2,6 +2,9 @@ let dates = document.querySelectorAll(".date");
 const day = new Date().getDate();
 const month = new Date().getMonth();
 const year = new Date().getFullYear();
+let pageNum = 1;
+let notesOnPage = 5;
+let straightSortDate = true;
 
 dates.forEach((date) => {
   date.innerHTML = day + "/" + month + "/" + year;
@@ -17,7 +20,7 @@ const taskList = document.querySelector(".tasks");
 const filters = document.querySelectorAll(".filters_by_state");
 
 
-filters.forEach(function (filter) {
+filters.forEach(function Foo(filter) {
   filter.addEventListener("click", function () {
     let thisfilter = filter;
     filterValue = filter.innerHTML
@@ -38,33 +41,62 @@ filters.forEach(function (filter) {
     filters.forEach(function (filter) {
       filter.classList.remove("active_filter");
       thisfilter.classList.add("active_filter");
-
-
     });
+    deleteTask()
   });
 
 });
 
 const arrows = document.querySelectorAll(".arrow");
+// arrows[0].addEventListener("click", function () {
+//   straightSortDate = !straightSortDate;
+
+//   arrows.forEach(function (arrow) {
+//     arrow.classList.toggle("active_arrow");
+//   });
+//   renderTasks(TASKS)
+// });
+
+
+
 arrows.forEach(function (arrow) {
   arrow.addEventListener("click", function () {
     let thisarrow = arrow;
 
+    straightSortDate = !straightSortDate;
+
     arrows.forEach(function (arrow) {
-      arrow.classList.remove("active_arrow");
-      thisarrow.classList.add("active_arrow");
+      arrow.classList.toggle("active_arrow");
     });
-    taskList.classList.toggle("reversed")
+    renderTasks(TASKS)
   });
 });
 
 addnewtask.onclick = createTask;
 
 
-function renderTasks(array) {
+const renderTasks = (array) => {
+
+  let dateSortedTasks = straightSortDate ? array : array.slice().reverse();
+  let toRender = dateSortedTasks;
+  if (filterValue === 'Done') {
+    toRender = dateSortedTasks.filter(item => item.isDone)
+  }
+
+  if (filterValue === 'Undone') {
+    toRender = dateSortedTasks.filter(item => !item.isDone)
+  }
+  console.log(array.map(item => item.id))
+
+  console.log(straightSortDate)
+
+  let start = (pageNum - 1) * notesOnPage;
+  let end = start + notesOnPage
+  let notes = toRender.slice(start, end);
+  console.log('Pagenum: ', pageNum)
   taskList.innerHTML = ''
-  array.map(item => {
-    console.log(item.main)
+  notes.map(item => {
+    // console.log(item.main)
     taskList.innerHTML += item.main;
     if (item.isDone === true) {
       document.querySelectorAll(".donebtn").forEach(btn => {
@@ -116,7 +148,8 @@ function createTask() {
 
   }
   TASKS.push(newTask);
-  if (TASKS.length > 5) {
+  if (TASKS.length > 25) {
+    alert("Это лимит")
     return TASKS
   }
   renderTasks(TASKS);
@@ -140,28 +173,25 @@ function deleteTask() {
 }
 
 let pages = document.querySelectorAll('#pagination li');
-let notesOnPage = 5;
+
+
 pages.forEach(function (page) {
-  page.addEventListener("click", () => {
-    let notesOnPage = 5;
-    page.addEventListener("click", function () {
 
-      let active = document.querySelector("#pagination li.active_page");
-      active.classList.remove('active_page')
+  page.addEventListener("click", function () {
 
-      this.classList.add("active_page")
-      let pageNum = +this.innerHTML;
-      let start = (pageNum - 1) * notesOnPage;
-      let end = start + notesOnPage
-      let notes = TASKS.slice(start, end);
-      console.log(TASKS)
+    let active = document.querySelector("#pagination li.active_page");
+    active.classList.remove('active_page')
 
-      renderTasks(notes)
+    this.classList.add("active_page")
+    pageNum = +this.innerHTML;
 
-      deleteTask();
-    });
 
-  })
+    renderTasks(TASKS)
+
+    deleteTask();
+  });
+
+
 })
 
 clearBtn = document.getElementById('clean');
@@ -169,7 +199,6 @@ clearBtn.addEventListener('click', clearList => {
   taskList.innerHTML = "";
   TASKS = []
 })
-
 
 
 
