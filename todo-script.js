@@ -158,7 +158,9 @@ function deleteTask() {
           TASKS.splice(i, 1);
         }
       }
+      renderTasks(TASKS);
       noTasks();
+      deleteTask()
     };
   }
 }
