@@ -120,6 +120,11 @@ h1 {
   margin-bottom: 50px;
 }
 
+.reversed {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 .task_body {
   display: flex;
   align-items: center;
