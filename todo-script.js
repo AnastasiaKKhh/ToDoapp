@@ -1,6 +1,6 @@
 let dates = document.querySelectorAll(".date");
 const day = new Date().getDate();
-const month = new Date().getMonth();
+const month = new Date().getMonth() + 1;
 const year = new Date().getFullYear();
 let pageNum = 1;
 let notesOnPage = 5;
@@ -36,9 +36,6 @@ filters.forEach(function (filter) {
     if (filterValue === "Done") {
       const tasks = TASKS.filter((item) => item.isDone);
       renderTasks(tasks);
-      addnewtask.onclick = () => {
-        alert('You can\'t add new tasks while filter "Done" is active');
-      };
     }
     if (filterValue === "Undone") {
       const tasks = TASKS.filter((item) => !item.isDone);
@@ -74,6 +71,11 @@ arrows.forEach(function (arrow) {
 });
 
 addnewtask.onclick = createTask;
+taskInput.addEventListener('keydown', function(key) {
+  if (key.keyCode === 13) {
+   createTask()
+  }
+});
 
 const renderTasks = (array) => {
   noTasks();
@@ -112,7 +114,7 @@ const renderTasks = (array) => {
       });
       renderTasks(TASKS);
       deleteTask();
-      congrats();
+      setTimeout(congrats,500)
     });
   });
 };
@@ -142,6 +144,11 @@ function createTask() {
     </li>
         `,
   };
+
+  if (taskInput.value === '' || taskInput.value.match(/^[ ]+$/)) {
+    alert("You can't add empty task")
+    return TASKS
+  }
   TASKS.push(newTask);
   taskInput.value = "";
   if (TASKS.length > 25) {
