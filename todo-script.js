@@ -65,6 +65,7 @@ arrows.forEach(function (arrow) {
       arrow.classList.toggle("active_arrow");
     });
     renderTasks(TASKS);
+    deleteTask()
   });
 });
 
