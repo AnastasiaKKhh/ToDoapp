@@ -36,14 +36,17 @@ filters.forEach(function (filter) {
     if (filterValue === "Done") {
       const tasks = TASKS.filter((item) => item.isDone);
       renderTasks(tasks);
+      renderBtn (tasks)
     }
     if (filterValue === "Undone") {
       const tasks = TASKS.filter((item) => !item.isDone);
       renderTasks(tasks);
+      renderBtn (tasks)
       addnewtask.onclick = createTask;
     }
     if (filterValue === "All") {
       renderTasks(TASKS);
+      renderBtn (TASKS)
       addnewtask.onclick = createTask;
     }
     filters.forEach(function (filter) {
@@ -77,8 +80,11 @@ taskInput.addEventListener('keydown', function(key) {
   }
 });
 
+
+
 const renderTasks = (array) => {
   noTasks();
+  
   let dateSortedTasks = straightSortDate ? array : array.slice().reverse();
   let toRender = dateSortedTasks;
   if (filterValue === "Done") {
@@ -119,6 +125,48 @@ const renderTasks = (array) => {
   });
 };
 
+const pageBox = document.getElementById('pagination');
+
+let howManyPages = Math.ceil(TASKS.length / notesOnPage) || 1;
+
+renderBtn(TASKS)
+
+function renderBtn (arr) {
+
+  howManyPages = Math.ceil(arr.length / notesOnPage) || 1
+  pageBox.innerHTML = "";
+
+  for(let i = 1; i<= howManyPages;i++) {
+    let li = document.createElement('li');
+    li.innerHTML = i;
+    pageBox.appendChild(li);
+  }
+  
+  howManyPages = Math.ceil(arr.length / notesOnPage);
+  console.log(pageBox)
+  let pages = pageBox.getElementsByTagName("li");
+  console.log(pages)
+  pages = Array.from(pages);
+  console.log(pages)
+
+  pages.forEach(function (page) {
+    page.addEventListener("click", function foo() {
+     console.log("here");
+     console.log(this)
+     pageNum = +this.innerHTML;
+      let active = document.querySelector("#pagination li.active_page");
+      if (active) {
+        active.classList.remove("active_page");
+      }
+     this.classList.add("active_page");
+      renderTasks(TASKS);
+      deleteTask();
+    });
+    
+  })
+
+}
+
 function createTask() {
   const id = new Date().getTime();
   const newTask = {
@@ -150,17 +198,22 @@ function createTask() {
     return TASKS
   }
   TASKS.push(newTask);
+
+
   taskInput.value = "";
   if (TASKS.length > 25) {
     alert("You archive tasks' limit. Delete some tasks to add new one");
     return TASKS;
   }
+
+  renderBtn (TASKS)
   renderTasks(TASKS);
   deleteTask();
   return TASKS;
 }
 
 function deleteTask() {
+  
   const close = document.getElementsByClassName("delete_task");
   for (let i = 0; i < close.length; i++) {
     close[i].onclick = function () {
@@ -172,34 +225,18 @@ function deleteTask() {
         }
       }
       renderTasks(TASKS);
+      renderBtn ()
       noTasks();
       deleteTask();
     };
   }
 }
 
-let pages = document.querySelectorAll("#pagination li");
-
-pages.forEach(function (page) {
-  page.addEventListener("click", function () {
-    let active = document.querySelector("#pagination li.active_page");
-    active.classList.remove("active_page");
-
-    this.classList.add("active_page");
-    pageNum = +this.innerHTML;
-
-    renderTasks(TASKS);
-
-    deleteTask();
-    noTasks();
-  });
-});
-
 clearBtn = document.getElementById("clean");
-clearBtn.addEventListener("click", (clearList) => {
-  taskList.innerHTML = "";
+clearBtn.addEventListener("click", () => {
   TASKS = [];
   noTasks();
+  renderBtn()
 });
 
 let congrats = () => {
