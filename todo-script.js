@@ -225,7 +225,7 @@ function deleteTask() {
   }
 }
 
-clearBtn = document.getElementById("clean");
+const clearBtn = document.getElementById("clean");
 
 clearBtn.addEventListener("click", () => {
   TASKS = [];
