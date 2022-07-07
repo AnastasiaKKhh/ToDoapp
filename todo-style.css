@@ -122,11 +122,6 @@ h1 {
   width: 100%;
 }
 
-.reversed {
-  display: flex;
-  flex-direction: column-reverse;
-}
-
 .task_body {
   display: flex;
   align-items: center;
@@ -181,8 +176,8 @@ h1 {
   margin-left: auto;
 }
 
-.delete_task:hover {
-  stroke: #8ea1ff;
+.delete_task:hover svg {
+  fill: #814cc5;
 }
 
 .done {
