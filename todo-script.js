@@ -96,6 +96,14 @@ const renderTasks = (array) => {
   let start = (pageNum - 1) * notesOnPage;
   let end = start + notesOnPage;
   let notes = toRender.slice(start, end);
+
+  if (pageNum != 1 && !notes.length) {
+    pageNum = (pageNum - 1)
+    start = (pageNum - 1) * notesOnPage;
+
+    end = start + notesOnPage;
+    notes = toRender.slice(start, end);
+  }
   taskList.innerHTML = "";
   notes.map((item) => {
     taskList.innerHTML += item.main;
@@ -212,11 +220,9 @@ function deleteTask() {
     close[i].onclick = function () {
       let task = close[i].parentElement.parentElement;
       task.remove();
-      for (let j = 0; j < TASKS.length; j++) {
-        if (i === j) {
-          TASKS.splice(i, 1);
-        }
-      }
+      TASKS = TASKS.filter(item => item.id !== +task.id) // перебирает все элементы и возвращает все, кроме того, на который я нажала
+      console.log(TASKS.length);
+
       renderTasks(TASKS);
       renderBtn(TASKS);
       noTasks();
@@ -239,5 +245,4 @@ let congrats = () => {
     alert("Congrats! You've done all your tasks!");
   }
 };
-
 
