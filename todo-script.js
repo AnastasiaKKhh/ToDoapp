@@ -27,7 +27,7 @@ noTasks();
 
 const filters = document.querySelectorAll(".filters_by_state");
 
-filters.forEach(function Foo(filter) {
+filters.forEach(function (filter) {
   filter.addEventListener("click", function () {
     let thisfilter = filter;
     filterValue = filter.innerHTML;
@@ -36,12 +36,12 @@ filters.forEach(function Foo(filter) {
       renderTasks(tasks);
       addnewtask.onclick = null;
     }
-    if (filterValue === "Undone") {
+     if (filterValue === "Undone") {
       const tasks = TASKS.filter((item) => !item.isDone);
       renderTasks(tasks);
       addnewtask.onclick = createTask;
     }
-    if (filterValue === "All") {
+     if (filterValue === "All") {
       renderTasks(TASKS);
       addnewtask.onclick = createTask;
     }
@@ -65,7 +65,8 @@ arrows.forEach(function (arrow) {
       arrow.classList.toggle("active_arrow");
     });
     renderTasks(TASKS);
-    deleteTask()
+    deleteTask();
+    noTasks()
   });
 });
 
@@ -179,6 +180,7 @@ pages.forEach(function (page) {
     renderTasks(TASKS);
 
     deleteTask();
+    noTasks()
   });
 });
 
@@ -187,5 +189,6 @@ clearBtn.addEventListener("click", (clearList) => {
   taskList.innerHTML = "";
   TASKS = [];
 });
+
 
 
