@@ -34,7 +34,9 @@ filters.forEach(function (filter) {
     if (filterValue === "Done") {
       const tasks = TASKS.filter((item) => item.isDone);
       renderTasks(tasks);
-      addnewtask.onclick = null;
+      addnewtask.onclick = () => {
+        alert('You can\'t add new tasks while filter "Done" is active')
+      };
     }
      if (filterValue === "Undone") {
       const tasks = TASKS.filter((item) => !item.isDone);
