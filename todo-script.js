@@ -23,8 +23,7 @@ let noTasks = () => {
   }
 };
 
-let allDone = (element) =>  element.isDone === true;
-
+let allDone = (element) => element.isDone === true;
 
 noTasks();
 
@@ -38,15 +37,15 @@ filters.forEach(function (filter) {
       const tasks = TASKS.filter((item) => item.isDone);
       renderTasks(tasks);
       addnewtask.onclick = () => {
-        alert('You can\'t add new tasks while filter "Done" is active')
+        alert('You can\'t add new tasks while filter "Done" is active');
       };
     }
-     if (filterValue === "Undone") {
+    if (filterValue === "Undone") {
       const tasks = TASKS.filter((item) => !item.isDone);
       renderTasks(tasks);
       addnewtask.onclick = createTask;
     }
-     if (filterValue === "All") {
+    if (filterValue === "All") {
       renderTasks(TASKS);
       addnewtask.onclick = createTask;
     }
@@ -63,7 +62,6 @@ const arrows = document.querySelectorAll(".arrow");
 
 arrows.forEach(function (arrow) {
   arrow.addEventListener("click", function () {
-
     straightSortDate = !straightSortDate;
 
     arrows.forEach(function (arrow) {
@@ -71,7 +69,7 @@ arrows.forEach(function (arrow) {
     });
     renderTasks(TASKS);
     deleteTask();
-    noTasks()
+    noTasks();
   });
 });
 
@@ -114,7 +112,7 @@ const renderTasks = (array) => {
       });
       renderTasks(TASKS);
       deleteTask();
-      congrats()
+      congrats();
     });
   });
 };
@@ -168,7 +166,7 @@ function deleteTask() {
       }
       renderTasks(TASKS);
       noTasks();
-      deleteTask()
+      deleteTask();
     };
   }
 }
@@ -184,9 +182,9 @@ pages.forEach(function (page) {
     pageNum = +this.innerHTML;
 
     renderTasks(TASKS);
-    
+
     deleteTask();
-    noTasks()
+    noTasks();
   });
 });
 
@@ -194,14 +192,13 @@ clearBtn = document.getElementById("clean");
 clearBtn.addEventListener("click", (clearList) => {
   taskList.innerHTML = "";
   TASKS = [];
-  noTasks()
+  noTasks();
 });
-
 
 let congrats = () => {
   if (TASKS.every(allDone)) {
-    alert("Congrats! You've done all your tasks!")
+    alert("Congrats! You've done all your tasks!");
   }
-}
+};
 
 
