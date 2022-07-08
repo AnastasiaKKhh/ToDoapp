@@ -87,6 +87,7 @@ const renderTasks = (array) => {
   let toRender = dateSortedTasks;
   if (filterValue === "Done") {
     toRender = dateSortedTasks.filter((item) => item.isDone);
+    renderBtn(toRender)
   }
 
   if (filterValue === "Undone") {
