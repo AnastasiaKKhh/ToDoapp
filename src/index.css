@@ -1,13 +1,67 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "nullstyle.css";
+
+* {
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  background: linear-gradient(90deg, #ff7bc7 -0.45%, #647dff 100%);
+  cursor: default;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 45px;
+  line-height: 68px;
+  color: #292929;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.list_body {
+  max-width: 600px;
+  background: #f8f9ff;
+  border: 1px solid #868686;
+  box-shadow: 28px 28px 50px -4px rgba(2, 12, 66, 0.1);
+  border-radius: 25px;
+  padding: 38px 37px 20px;
+  margin: 1% auto 0;
+}
+
+.list_body_content {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+
+ #pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 35px;
+}
+
+#pagination li {
+  font-size: 16px;
+  padding: 3px 22px;
+  border: 0.5px solid #292929;
+  border-radius: 3px;
+}
+
+#pagination li + li {
+  margin-left: 12px;
+}
+
+#pagination li:hover {
+  background: #814cc5;
+  border-color: #814cc5;
+  color: #f8f9ff;
+}
+
+.active_page {
+  background: #814cc5;
+  border-color: #814cc5;
+  color: #f8f9ff;
 }

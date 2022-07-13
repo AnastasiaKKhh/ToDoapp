@@ -1,0 +1,28 @@
+.create_new_task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 34px;
+}
+
+.task_input {
+  border: 1px solid #868686;
+  border-radius: 10px;
+  padding: 9px 24px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  width: 100%;
+}
+
+.task_input::placeholder {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  color: #868686;
+}
+
+.task_input:focus {
+  outline-color: #814cc5;
+  outline-width: 3px;
+}
