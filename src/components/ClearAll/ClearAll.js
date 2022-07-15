@@ -3,7 +3,7 @@ import styles from "./clearall_btnstyle.module.css"
 import { ClearAllButtonIcon } from "../../assets/clearAllButtonIcon";
 
 function ClearAll({ setTodo, setCurrentPage }) {
-  const clear = () => {
+  const clearList = () => {
     setTodo([]);
     setCurrentPage(1)
   };
@@ -12,7 +12,7 @@ function ClearAll({ setTodo, setCurrentPage }) {
       <button
         type="button"
         className={styles.cleanbtn}
-        onClick={clear}
+        onClick={clearList}
       >
         Clear list{" "}
         <ClearAllButtonIcon clsName={styles.cleanbtn_icon} />
