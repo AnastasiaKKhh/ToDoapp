@@ -19,10 +19,9 @@
 }
 
 .arrows {
-  background-color: white;
-  border: 1px solid white;
+  background-color: #f8f9ff;
+  border: 1px solid #f8f9ff;
 }
-
 
 .filters_by_state {
   background: #d9d9d9;
@@ -36,6 +35,10 @@
   border: 1px solid #d9d9d9;
 }
 
+.filters_by_state:active {
+  background-color: #b4b4b4;
+}
+
 .filters button + button {
   margin-left: 14px;
 }
@@ -44,31 +47,4 @@
   color: #f8f9ff;
   background-color: #814cc5;
   border-color: #814cc5;
-}
-
-.violet {
-  font-size: 16px;
-  padding: 3px 22px;
-  border-radius: 3px;
-  background: #814cc5;
-  border: 0.5px solid #814cc5;
-  color: #f8f9ff;
-}
-
-.common {
-  font-size: 16px;
-  padding: 3px 22px;
-  border: 0.5px solid #292929;
-  border-radius: 3px;
-}
-
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 35px;
-}
-
-.pagination button + button {
-  margin-left: 12px;
 }

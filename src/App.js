@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import './index.css';
 import TaskList from './components/TaskList/TaskList';
 import TaskInput from './components/TaskInput/taskInput';
-import ClearAll from './components/ClearAll/ClearAll';
-
 function App() {
   const [todo, setTodo] = useState([]);
 
@@ -14,7 +12,6 @@ function App() {
           <h1>ToDo</h1>
           <TaskInput todo={todo} setTodo={setTodo} />
           <TaskList todo={todo} setTodo={setTodo} />
-          <ClearAll todo={todo} setTodo={setTodo} />
         </div>
       </div>
     </div>

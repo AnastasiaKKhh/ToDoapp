@@ -7,17 +7,17 @@ function TaskInput({ todo, setTodo }) {
   const handleChange = (event) => setInput(event.target.value);
   const handleInputPress = (event) => {
     if (event.key === "Enter") {
-      if (input !== "") {
+      if (input) {
         if (todo.length === 25) {
           alert("Task limit")
           return
         }
-        setTodo(([...todo, {
+        setTodo([...todo, {
           id: new Date().getTime(),
           title: input,
           isDone: false,
         }
-        ]))
+        ])
         setInput("");
       } else {
         alert('You can\'t add empty task')

@@ -1,195 +1,212 @@
 import React, { useState, useEffect } from "react";
 import TaskItem from "./TaskItem/taskItem";
 import listStyle from "./styles.module.css";
-import "./filterstyle.css";
+import filterStyle from "./filterstyle.module.css";
+import ClearAll from "../ClearAll/ClearAll"
+import { ArrowUp } from "../../assets/arrows";
+import { ArrowDown } from "../../assets/arrows";
+import { LastPage } from "../../assets/pagesNavigationIcons";
+import { FirstPage } from "../../assets/pagesNavigationIcons";
+import PaginationButtons from "./Pagination/PaginationButtons";
 
 const TaskList = ({ todo, setTodo }) => {
-  const notesOnPage = 5;
+  const MAX_NOTES = 5;
 
-  const [filtered, setFiltered] = useState(todo);
-  const [filt, setFilt] = useState("all");
+  const filtersByState = {
+    all: 10,
+    done: 1,
+    undone: 0,
+  }
+
+  const countPages = (todosArray) => Math.ceil(todosArray.length / MAX_NOTES) || 1;
+  const [inputValue, setInputValue] = useState('');
+
+  const [filtered, setFiltered] = useState([]);
+  const [activeFilter, setActiveFilter] = useState(filtersByState.all);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const lastTaskIndex = currentPage * notesOnPage;
-  const firstTaskIndex = lastTaskIndex - notesOnPage;
-  let currentTask;
+  const lastTaskIndex = currentPage * MAX_NOTES;
+  const firstTaskIndex = lastTaskIndex - MAX_NOTES;
   const [pagesAmount, setPagesAmount] = useState(countPages(todo));
+  const [isAscendingSort, setAscendingSort] = useState(false);
+  let shownTasks = [...filtered];
 
-  const [dateSorting, setDateSorting] = useState(false);
-
-  reverseArr()
-
-  const dateSort = () => {
-    setDateSorting(!dateSorting);
-    reverseArr()
+  const reverseArr = () => {
+    if (!isAscendingSort) {
+      shownTasks = [...filtered].reverse();
+    }
+    return shownTasks;
   };
 
-  function reverseArr() {
-    if (dateSorting) {
-      currentTask = [...filtered]
-    } else {
-      currentTask = [...filtered].reverse()
-    }
-    return currentTask
+  reverseArr();
 
-  }
+  const dateSort = () => {
+    setAscendingSort(!isAscendingSort);
+    reverseArr();
+  };
 
-  function countPages(todosArray) {
-    return Math.ceil(todosArray.length / notesOnPage) || 1;
-  }
-  
-  function changePage(e) {
+  const changePage = (e) => {
     setCurrentPage(e.target.value);
-  }
+  };
 
-  function renderButtons(pagesAmount) {
-    const content = [];
-    for (let i = 1; i <= pagesAmount; i++) {
-      content.push(
-        <button onClick={changePage} key={i} value={i} className= {currentPage == i ? 'violet': 'common'}>
-          {i}
-        </button>
-      );
-    }
+  const deleteTodo = (id) => {
+    const deletedTask = todo.filter((item) => item.id !== id);
+    setTodo(deletedTask);
+  };
 
-    return content;
-  }
-
-  function deleteTodo(id) {
-    setTodo([...todo].filter((item) => item.id != id));
-  }
-
-  function statusTodo(id) {
+  const changeTaskStatus = (id) => {
     setTodo(
-      [...todo].filter((item) => {
-        if (item.id == id) {
+      todo.filter((item) => {
+        if (item.id === id) {
           item.isDone = !item.isDone;
         }
         return item;
       })
     );
-  }
+  };
 
+  const todoFilter = (status) => {
+    setActiveFilter(status);
+    if (status === filtersByState.all) {
+      setFiltered(todo);
+    } else {
+      let newTodo;
+      if (status === filtersByState.done) {
+        newTodo = todo.filter((item) => item.isDone)
+        setFiltered(newTodo)
+      } else {
+        newTodo = todo.filter((item) => !item.isDone);
+        setFiltered(newTodo);
+      }
+    }
+  };
+
+  const toTheFirstPage = () => {
+    setCurrentPage(1);
+  };
+
+  const toTheLastPage = () => {
+    setCurrentPage(pagesAmount);
+  };
 
   useEffect(() => {
     setFiltered(todo);
   }, [todo, currentPage]);
 
   useEffect(() => {
-    {
-      setPagesAmount(countPages(filtered));
-    }
-  }, [filt, filtered]);
+    setPagesAmount(countPages(filtered));
+  }, [activeFilter, filtered]);
 
   useEffect(() => {
     setFiltered(filtered);
-  }, [filtered, currentPage, filt]);
+  }, [filtered, currentPage, activeFilter]);
 
   useEffect(() => {
-    setCurrentPage (currentPage - 1 || 1);
+    setCurrentPage(1);
+  }, [activeFilter]);
+
+  useEffect(() => {
+    if (currentPage <= pagesAmount) {
+      setCurrentPage(currentPage);
+    } else {
+      setCurrentPage(currentPage - 1 || 1);
+    }
   }, [pagesAmount]);
 
   useEffect(() => {
-    switch (filt) {
-      case true:
-        setFiltered((todo.filter(item => item.isDone)))
-     
+    switch (activeFilter) {
+      case filtersByState.done:
+        setFiltered(todo.filter((item) => item.isDone));
+
         break;
 
-      case false:
-        setFiltered((todo.filter(item => !item.isDone)))
+      case filtersByState.undone:
+        setFiltered(todo.filter((item) => !item.isDone));
         break;
 
-      default: setFiltered(todo);
+      default:
+        setFiltered(todo);
         break;
     }
-  }, [filt, todo]);
-
-  const todoFilter = (status) => {
-    setFilt(status);
-    if (status == "all") {
-      setFiltered(todo);
-    } else {
-      let newTodo = [...todo].filter((item) => item.isDone === status);
-      setFiltered(newTodo);
-    }
-  };
+  }, [activeFilter, todo]);
 
   return (
     <div>
-      <div className="filters">
+      <div className={filterStyle.filters}>
         <button
           className={
-            filt === "all"
-              ? "filters_by_state active_filter"
-              : "filters_by_state"
+            activeFilter === filtersByState.all
+              ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
+              : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter("all")}
+          onClick={() => todoFilter(filtersByState.all)}
         >
           All
         </button>
         <button
           className={
-            filt === true
-              ? "filters_by_state active_filter"
-              : "filters_by_state"
+            activeFilter === filtersByState.done
+              ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
+              : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(true)}
+          onClick={() => todoFilter(filtersByState.done)}
         >
           Done
         </button>
         <button
           className={
-            filt === false
-              ? "filters_by_state active_filter"
-              : "filters_by_state"
+            activeFilter === filtersByState.undone
+              ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
+              : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(false)}
+          onClick={() => todoFilter(filtersByState.undone)}
         >
           Undone
         </button>
-        <div className="filters_by_date">
-          <p id="sortbydate">Sort by date</p>
-          <div className="arrows">
-            <button className="arrows" onClick={() => dateSort()}>
-              {dateSorting ? (
-                <svg
-                  className="active_arrow arrow"
-                  width="10"
-                  height="13"
-                  viewBox="0 0 10 13"
-                  fill="black"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M10 8.14034L5.61403 12.5263L4.38596 12.5263L-6.32936e-07 8.14034L1.22807 6.89473L4.12281 9.77192L4.1228 -9.60619e-06L5.87719 -9.75956e-06L5.87719 9.77192L8.77193 6.87718L10 8.14034Z" />
-                </svg>
-              ) : (
-                <svg className="arrow" width="10" height="13" viewBox="0 0 10 13" fill="black" xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0 4.38596L4.38597 0H5.61404L10 4.38596L8.77193 5.63158L5.87719 2.75439V12.5263H4.12281V2.75439L1.22807 5.64912L0 4.38596Z" />
-                </svg>
-              )}
+        <div className={filterStyle.filters_by_date}>
+          <p>Sort by date</p>
+          <div className={filterStyle.arrows}>
+            <button className={filterStyle.arrows} onClick={dateSort}>
+              {isAscendingSort ? <ArrowUp arrowClass={filterStyle.arrow} /> : <ArrowDown arrowClass={filterStyle.arrow} />
+              }
             </button>
           </div>
         </div>
       </div>
       <ul className={listStyle.tasks}>
-
-        {currentTask.slice(firstTaskIndex, lastTaskIndex).map((item) => (
+        {shownTasks.slice(firstTaskIndex, lastTaskIndex).map((item) => (
           <TaskItem
             key={item.id}
             todo={todo}
             setTodo={setTodo}
             item={item}
             deleteTodo={deleteTodo}
-            statusTodo={statusTodo}
+            changeTaskStatus={changeTaskStatus}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
           />
         ))}
       </ul>
-      <div className="pagination">
-        {renderButtons(pagesAmount)}
+      <div className={listStyle.pagination}>
+        <span onClick={toTheFirstPage}>
+          <FirstPage buttonClass={listStyle.pageNav} />
+        </span>
+        <div className={listStyle.pages}>
+          {
+            new Array(pagesAmount).fill().map((element, i) => (
+              <PaginationButtons
+                i={i + 1}
+                changePage={changePage}
+                currentPage={currentPage}
+              />
+            ))
+          }
+        </div>
+        <span onClick={toTheLastPage}>
+          <LastPage buttonClass={listStyle.pageNav} />
+        </span>
       </div>
+      <ClearAll todo={todo} setTodo={setTodo} currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   );
 };
