@@ -6,7 +6,6 @@ function PaginationButtons({ i, changePage, currentPage }) {
   return (
     <button
       onClick={changePage}
-      key={i}
       value={i}
       className={
         +currentPage === i ? `${btnStyle.violet}` : `${btnStyle.common}`
