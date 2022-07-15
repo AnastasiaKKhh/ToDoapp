@@ -28,21 +28,12 @@ const TaskList = ({ todo, setTodo }) => {
   const lastTaskIndex = currentPage * MAX_NOTES;
   const firstTaskIndex = lastTaskIndex - MAX_NOTES;
   const [pagesAmount, setPagesAmount] = useState(countPages(todo));
-  const [isAscendingSort, setAscendingSort] = useState(false);
-  let shownTasks = [...filtered];
-
-  const reverseArr = () => {
-    if (!isAscendingSort) {
-      shownTasks = [...filtered].reverse();
-    }
-    return shownTasks;
-  };
-
-  reverseArr();
+  const [isAscendingSort, setAscendingSort] = useState(true);
+  const shownTasks = [...filtered].sort((prev, next) =>
+  !isAscendingSort ? prev.id - next.id : next.id - prev.id)
 
   const dateSort = () => {
     setAscendingSort(!isAscendingSort);
-    reverseArr();
   };
 
   const changePage = (e) => {
@@ -198,6 +189,7 @@ const TaskList = ({ todo, setTodo }) => {
                 i={i + 1}
                 changePage={changePage}
                 currentPage={currentPage}
+                key={i}
               />
             ))
           }
