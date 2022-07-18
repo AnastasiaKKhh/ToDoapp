@@ -43,20 +43,24 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
   };
 
   const deleteTodo = (uuid) => {
-    axios.delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`)
-    const deletedTask = todo.filter((item) => item.uuid !== uuid);
-    setTodo(deletedTask);
-  };
+    axios.delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`).then (() => {
+       const deletedTask = todo.filter((item) => item.uuid !== uuid);
+      setTodo(deletedTask);
+    })
+
+  }
 
   const changeTaskStatus = (uuid) => {
-    setTodo(
-      todo.filter((item) => {
-        if (item.uuid === uuid) {
-          item.done = !item.done;
-        }
-        return item;
-      })
-    );
+    axios.patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`).then (() => {
+    //    setTodo(
+    //   todo.filter((item) => {
+    //     if (item.uuid === uuid) {
+    //       item.done = !item.done;
+    //     }
+    //     return item;
+    //   })
+    // );
+    })
   };
 
   const todoFilter = (status) => {
