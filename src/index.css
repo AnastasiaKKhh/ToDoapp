@@ -1,0 +1,36 @@
+@import "nullstyle.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+  background: linear-gradient(90deg, #ff7bc7 -0.45%, #647dff 100%);
+  cursor: default;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 45px;
+  line-height: 68px;
+  color: #292929;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.list_body {
+  max-width: 600px;
+  background: #f8f9ff;
+  border: 1px solid #868686;
+  box-shadow: 28px 28px 50px -4px rgba(2, 12, 66, 0.1);
+  border-radius: 25px;
+  padding: 38px 37px 20px;
+  margin: 1% auto 0;
+}
+
+.list_body_content {
+  max-width: 500px;
+  margin: 0 auto;
+}

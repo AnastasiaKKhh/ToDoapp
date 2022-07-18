@@ -1,0 +1,50 @@
+.filters {
+  margin-bottom: 33px;
+  display: flex;
+  align-items: center;
+}
+
+.filters_by_date {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.filters_by_date p {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  margin-right: 19px;
+}
+
+.arrows {
+  background-color: #f8f9ff;
+  border: 1px solid #f8f9ff;
+}
+
+.filters_by_state {
+  background: #d9d9d9;
+  border-radius: 7px;
+  padding: 8px 3% 6px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #000000;
+  border: 1px solid #d9d9d9;
+}
+
+.filters_by_state:active {
+  background-color: #b4b4b4;
+}
+
+.filters button + button {
+  margin-left: 14px;
+}
+
+.active_filter {
+  color: #f8f9ff;
+  background-color: #814cc5;
+  border-color: #814cc5;
+}
