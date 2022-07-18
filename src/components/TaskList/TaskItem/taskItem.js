@@ -47,7 +47,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
       <div className={taskStyle.right_side}>
         <button
           className={item.done ? `${taskStyle.done}` : `${taskStyle.donebtn}`}
-          onClick={() => changeTaskStatus(item.id)}
+          onClick={() => changeTaskStatus(item.uuid)}
         >
           <DoneIcon />
         </button>
@@ -65,7 +65,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
         ) : (
           <p
             className={taskStyle.tasktxt}
-            onClick={() => editTodo(item.title)}
+            onClick={() => editTodo(item.name)}
           >
             {item.name}
           </p>

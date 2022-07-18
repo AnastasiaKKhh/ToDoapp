@@ -42,17 +42,17 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
     setCurrentPage(e.target.value);
   };
 
-  const deleteTodo = (id) => {
-    axios.delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${id}`)
-    // const deletedTask = todo.filter((item) => item.id !== id);
-    // setTodo(deletedTask);
+  const deleteTodo = (uuid) => {
+    axios.delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`)
+    const deletedTask = todo.filter((item) => item.uuid !== uuid);
+    setTodo(deletedTask);
   };
 
-  const changeTaskStatus = (id) => {
+  const changeTaskStatus = (uuid) => {
     setTodo(
       todo.filter((item) => {
-        if (item.id === id) {
-          item.isDone = !item.isDone;
+        if (item.uuid === uuid) {
+          item.done = !item.done;
         }
         return item;
       })
@@ -83,17 +83,17 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
     setCurrentPage(pagesAmount);
   };
 
-  // useEffect(() => {
-  //   setFiltered(todo);
-  // }, [todo, currentPage]);
+  useEffect(() => {
+    setFiltered(todo);
+  }, [todo, currentPage]);
 
   // useEffect(() => {
   //   setPagesAmount(countPages(filtered));
   // }, [activeFilter, filtered]);
 
-  // useEffect(() => {
-  //   setFiltered(filtered);
-  // }, [filtered, currentPage, activeFilter]);
+  useEffect(() => {
+    setFiltered(filtered);
+  }, [filtered, currentPage, activeFilter]);
 
   useEffect(() => {
     setCurrentPage(1);

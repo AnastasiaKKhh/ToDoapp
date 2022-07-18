@@ -1,24 +1,33 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import styles from "./styles.module.css"
+import axios from "axios";
+import React, { useState } from "react";
+import styles from "./styles.module.css";
 
 function TaskInput({ todo, setTodo }) {
-
   const [input, setInput] = useState("");
   const handleChange = (event) => setInput(event.target.value);
   const handleInputPress = (event) => {
     if (event.key === "Enter") {
       if (input) {
         if (todo.length === 25) {
-          alert("Task limit")
-          return
+          alert("Task limit");
+          return;
         }
-        axios.post("https://todo-api-learning.herokuapp.com/v1/task/3", {
-          name: input,
-          done: false,
-        }).then (res => {
-          console.log(res)
-        })
+        axios
+          .post("https://todo-api-learning.herokuapp.com/v1/task/3", {
+            name: input,
+            done: false,
+          })
+          .then((res) => {
+            console.log(res.data);
+            setTodo([
+              ...todo,
+              {
+                name: input,
+                done: false,
+                key: res.data.uuid,
+              },
+            ]);
+          });
         // setTodo([...todo, {
         //   id: new Date().getTime(),
         //   name: input,
@@ -27,11 +36,10 @@ function TaskInput({ todo, setTodo }) {
         // ])
         setInput("");
       } else {
-        alert('You can\'t add empty task')
+        alert("You can't add empty task");
       }
     }
   };
-
 
   return (
     <div className={styles.create_new_task}>
@@ -44,8 +52,7 @@ function TaskInput({ todo, setTodo }) {
         onKeyPress={handleInputPress}
       />
     </div>
-  )
-
+  );
 }
 
-export default TaskInput
+export default TaskInput;
