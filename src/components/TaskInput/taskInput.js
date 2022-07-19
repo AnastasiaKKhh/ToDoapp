@@ -18,15 +18,12 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
             done: false,
           })
           .then((res) => {
-            console.log(res.data);
-            // const creationDate = res.data.createdAt.split('').slice(0,10).join('');
             const result = [...todo, res.data]
-            // console.log(result.length)
             if (result.length <= MAX_NOTES) {
               setTodo(result);
             }
             setTasksCount(tasksCount + 1)
-          });
+          }).catch((e) =>console.log(e))
         setInput("");
       } else {
         alert("You can't add empty task");
