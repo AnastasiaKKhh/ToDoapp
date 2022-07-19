@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import taskStyle from "./styles.module.css";
 import { DeleteButtonIcon } from "../../../assets/deleteButtonIcon";
 import { DoneIcon } from "../../../assets/doneIcon";
@@ -6,8 +6,6 @@ import axios from "axios";
 
 function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
   const [edit, setEdit] = useState(false);
-  const currentDate = new Date().getDate() + '/' + `${new Date().getMonth() + 1}` + '/' + new Date().getFullYear();
-
 
   const editTodo = (title) => {
     setEdit(true);
@@ -18,7 +16,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
     setEdit(false);
   };
 
-  const saveTodo = (event, id) => {
+  const saveTodo = (event, uuid) => {
     if (event.key === "Escape") {
       setEdit(false);
       return;
@@ -26,18 +24,22 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
       if (event.key !== "Enter") {
         return;
       }
+      axios.patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`, {
+      name: inputValue
+    }).then(() => {
       setTodo(
         todo.map((todoItem) => {
-          if (todoItem.id === id) {
+          if (todoItem.uuid === uuid) {
             const editedTask = {
               ...todoItem,
-              title: inputValue
+              name: inputValue
             };
             return editedTask;
           }
           return todoItem;
         })
       );
+    })
       setEdit(false);
     }
   }
@@ -47,7 +49,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
       <div className={taskStyle.right_side}>
         <button
           className={item.done ? `${taskStyle.done}` : `${taskStyle.donebtn}`}
-          onClick={() => changeTaskStatus(item.uuid)}
+          onClick={() => changeTaskStatus(item.uuid, item.done)}
         >
           <DoneIcon />
         </button>
@@ -56,7 +58,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
             <input
               autoFocus
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(event) => saveTodo(event, item.id)}
+              onKeyDown={(event) => saveTodo(event, item.uuid)}
               onBlur={closeOnBlur}
               value={inputValue}
               className={taskStyle.edit_mode_input}
@@ -72,7 +74,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
         )}
       </div>
       <div className={taskStyle.left_side}>
-        <p className={taskStyle.date}>{currentDate}</p>
+        <p className={taskStyle.date}>{item.createdAt.split('').slice(0,10).join('')}</p>
         <button
           className={taskStyle.delete_task}
           onClick={() => deleteTodo(item.uuid)}

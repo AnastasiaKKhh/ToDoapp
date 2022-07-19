@@ -2,13 +2,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 
-function TaskInput({ todo, setTodo }) {
+function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
   const [input, setInput] = useState("");
   const handleChange = (event) => setInput(event.target.value);
   const handleInputPress = (event) => {
     if (event.key === "Enter") {
       if (input) {
-        if (todo.length === 25) {
+        if (tasksCount === 25) {
           alert("Task limit");
           return;
         }
@@ -19,21 +19,14 @@ function TaskInput({ todo, setTodo }) {
           })
           .then((res) => {
             console.log(res.data);
-            setTodo([
-              ...todo,
-              {
-                name: input,
-                done: false,
-                key: res.data.uuid,
-              },
-            ]);
+            // const creationDate = res.data.createdAt.split('').slice(0,10).join('');
+            const result = [...todo, res.data]
+            // console.log(result.length)
+            if (result.length <= MAX_NOTES) {
+              setTodo(result);
+            }
+            setTasksCount(tasksCount + 1)
           });
-        // setTodo([...todo, {
-        //   id: new Date().getTime(),
-        //   name: input,
-        //   done: false,
-        // }
-        // ])
         setInput("");
       } else {
         alert("You can't add empty task");

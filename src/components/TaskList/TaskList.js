@@ -9,10 +9,9 @@ import { LastPage } from "../../assets/pagesNavigationIcons";
 import { FirstPage } from "../../assets/pagesNavigationIcons";
 import PaginationButtons from "./Pagination/PaginationButtons";
 import axios from "axios";
-import { AxiosInstance } from "../../api/http";
 
-const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setPagesAmount }) => {
-  const MAX_NOTES = 5;
+const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCurrentPage, pagesAmount, setPagesAmount, MAX_NOTES }) => {
+  // const MAX_NOTES = 5;
 
   const filtersByState = {
     all: 10,
@@ -23,7 +22,7 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
   // const countPages = (todosArray) => Math.ceil(todosArray.length / MAX_NOTES) || 1;
   const [inputValue, setInputValue] = useState('');
 
-  const [filtered, setFiltered] = useState([]);
+  // const [filtered, setFiltered] = useState([]);
   const [activeFilter, setActiveFilter] = useState(filtersByState.all);
 
   // const [currentPage, setCurrentPage] = useState(1);
@@ -31,8 +30,8 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
   const firstTaskIndex = lastTaskIndex - MAX_NOTES;
   // const [pagesAmount, setPagesAmount] = useState(countPages(todo));
   const [isAscendingSort, setAscendingSort] = useState(true);
-  const shownTasks = [...filtered].sort((prev, next) =>
-  !isAscendingSort ? prev.id - next.id : next.id - prev.id)
+  // const shownTasks = [...filtered].sort((prev, next) =>
+  //   !isAscendingSort ? prev.id - next.id : next.id - prev.id)
 
   const dateSort = () => {
     setAscendingSort(!isAscendingSort);
@@ -43,38 +42,41 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
   };
 
   const deleteTodo = (uuid) => {
-    axios.delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`).then (() => {
-       const deletedTask = todo.filter((item) => item.uuid !== uuid);
+    axios.delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`).then(() => {
+      const deletedTask = todo.filter((item) => item.uuid !== uuid);
       setTodo(deletedTask);
+      setTasksCount(tasksCount - 1)
     })
 
   }
 
-  const changeTaskStatus = (uuid) => {
-    axios.patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`).then (() => {
-    //    setTodo(
-    //   todo.filter((item) => {
-    //     if (item.uuid === uuid) {
-    //       item.done = !item.done;
-    //     }
-    //     return item;
-    //   })
-    // );
+  const changeTaskStatus = (uuid, done) => {
+    axios.patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`, {
+      done: !done
+    }).then(() => {
+      setTodo(
+        todo.filter((item) => {
+          if (item.uuid === uuid) {
+            item.done = !item.done;
+          }
+          return item;
+        })
+      );
     })
   };
 
   const todoFilter = (status) => {
     setActiveFilter(status);
     if (status === filtersByState.all) {
-      setFiltered(todo);
+      setTodo(todo);
     } else {
       let newTodo;
       if (status === filtersByState.done) {
         newTodo = todo.filter((item) => item.done)
-        setFiltered(newTodo)
+        setTodo(newTodo)
       } else {
         newTodo = todo.filter((item) => !item.done);
-        setFiltered(newTodo);
+        setTodo(newTodo);
       }
     }
   };
@@ -87,46 +89,84 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
     setCurrentPage(pagesAmount);
   };
 
-  useEffect(() => {
-    setFiltered(todo);
-  }, [todo, currentPage]);
+  // useEffect(() => {
+  //   rerender ()
+  // }, [todo]);
 
   // useEffect(() => {
   //   setPagesAmount(countPages(filtered));
   // }, [activeFilter, filtered]);
 
-  useEffect(() => {
-    setFiltered(filtered);
-  }, [filtered, currentPage, activeFilter]);
+  // useEffect(() => {
+  //   setFiltered(filtered);
+  // }, [filtered, currentPage, activeFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [activeFilter]);
 
+  useEffect(() => {
+    if (currentPage <= pagesAmount) {
+      setCurrentPage(currentPage);
+    } else {
+      setCurrentPage(currentPage - 1 || 1);
+    }
+  }, [pagesAmount]);
+
   // useEffect(() => {
-  //   if (currentPage <= pagesAmount) {
-  //     setCurrentPage(currentPage);
-  //   } else {
-  //     setCurrentPage(currentPage - 1 || 1);
+  //   switch (activeFilter) {
+  //     case filtersByState.done:
+  //       setTodo(todo.filter((item) => item.done));
+
+  //       break;
+
+  //     case filtersByState.undone:
+  //       setTodo(todo.filter((item) => !item.done));
+  //       break;
+
+  //     default:
+  //       setTodo(todo);
+  //       break;
   //   }
-  // }, [pagesAmount]);
+  // }, [activeFilter, todo]);
+
+function rerender () {
+  switch (activeFilter) {
+    case filtersByState.done:
+      setTodo(todo.filter((item) => item.done));
+      break;
+
+    case filtersByState.undone:
+      setTodo(todo.filter((item) => !item.done));
+      break;
+
+    default:
+      setTodo(todo);
+      break;
+  }
+}
 
   useEffect(() => {
-    switch (activeFilter) {
-      case filtersByState.done:
-        setFiltered(todo.filter((item) => item.done));
+    const fetchData = async () => {
 
-        break;
+      let filter = '';
+      if (activeFilter === 1) {
+        filter = 'done'
+      }
+      if (activeFilter === 0) {
+        filter = 'undone'
+      }
 
-      case filtersByState.undone:
-        setFiltered(todo.filter((item) => !item.done));
-        break;
-
-      default:
-        setFiltered(todo);
-        break;
+      const { data } = await axios
+        .get(
+          `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${filter}&order=${isAscendingSort ? 'asc' : 'desc'}&pp=5&page=${currentPage}`
+        )
+      setTodo(data.tasks);
+      setTasksCount(data.count)
     }
-  }, [activeFilter, todo]);
+    fetchData()
+  }, [currentPage, activeFilter, isAscendingSort,tasksCount])
+
 
   return (
     <div>
@@ -172,7 +212,8 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
         </div>
       </div>
       <ul className={listStyle.tasks}>
-        {shownTasks.slice(firstTaskIndex, lastTaskIndex).map((item) => (
+        {todo.map((item) => (
+
           <TaskItem
             key={item.uuid}
             todo={todo}
@@ -191,7 +232,7 @@ const TaskList = ({ todo, setTodo, currentPage,setCurrentPage, pagesAmount, setP
         </span>
         <div className={listStyle.pages}>
           {
-            new Array(pagesAmount).fill().map((element, i) => (
+            new Array(pagesAmount).fill().map((_, i) => (
               <PaginationButtons
                 i={i + 1}
                 changePage={changePage}
