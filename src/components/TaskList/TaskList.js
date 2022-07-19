@@ -46,7 +46,7 @@ const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCu
       const deletedTask = todo.filter((item) => item.uuid !== uuid);
       setTodo(deletedTask);
       setTasksCount(tasksCount - 1)
-    })
+    }).catch((e) =>alert(`Error! ${e}`))
 
   }
 
@@ -62,7 +62,7 @@ const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCu
           return item;
         })
       );
-    })
+    }).catch((e) =>console.log(`Error! ${e}`))
   };
 
   const todoFilter = (status) => {
@@ -130,21 +130,21 @@ const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCu
   //   }
   // }, [activeFilter, todo]);
 
-function rerender () {
-  switch (activeFilter) {
-    case filtersByState.done:
-      setTodo(todo.filter((item) => item.done));
-      break;
+// function rerender () {
+//   switch (activeFilter) {
+//     case filtersByState.done:
+//       setTodo(todo.filter((item) => item.done));
+//       break;
 
-    case filtersByState.undone:
-      setTodo(todo.filter((item) => !item.done));
-      break;
+//     case filtersByState.undone:
+//       setTodo(todo.filter((item) => !item.done));
+//       break;
 
-    default:
-      setTodo(todo);
-      break;
-  }
-}
+//     default:
+//       setTodo(todo);
+//       break;
+//   }
+// }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,7 +165,8 @@ function rerender () {
       setTasksCount(data.count)
     }
     fetchData()
-  }, [currentPage, activeFilter, isAscendingSort,tasksCount])
+    fetchData().catch((e) =>alert(`error!${e}`))
+  }, [currentPage, activeFilter, isAscendingSort,tasksCount]) //including todo causes flashing
 
 
   return (

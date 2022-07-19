@@ -34,12 +34,13 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
               ...todoItem,
               name: inputValue
             };
+            console.log(editedTask)
             return editedTask;
           }
           return todoItem;
         })
       );
-    })
+    }).catch((e) =>alert(`Error! ${e}`))
       setEdit(false);
     }
   }
