@@ -129,16 +129,14 @@ const TaskList = ({
       }
 
       const { data } = await axios.get(
-        `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${filter}&order=${
-          isAscendingSort ? "asc" : "desc"
-        }&pp=5&page=${currentPage}`
+        `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${filter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
       );
       setTodo(data.tasks);
       setTasksCount(data.count);
     };
     fetchData();
-    fetchData().catch((e) => alert(`error!${e}`));
-  }, [currentPage, activeFilter, isAscendingSort, tasksCount]); //including todo causes flashing
+    fetchData().catch((error) => alert(`Oops! Error receiving data from the server. Try again later!  Status code: ${error.response.status}`));
+  }, [currentPage, activeFilter, isAscendingSort, tasksCount]);
 
   return (
     <div>
