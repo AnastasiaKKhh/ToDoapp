@@ -3,6 +3,7 @@ import taskStyle from "./styles.module.css";
 import { DeleteButtonIcon } from "../../../assets/deleteButtonIcon";
 import { DoneIcon } from "../../../assets/doneIcon";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
 
@@ -35,23 +36,36 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
                 ...todoItem,
                 name: inputValue
               };
-              console.log(editedTask)
               return editedTask;
             }
             return todoItem;
           })
         );
       }).catch((error) => {
-        console.log(error)
         switch (error.response.status) {
           case 400:
-            alert('Task not created! Maybe the same task has been already exist');
+            Swal.fire({
+              icon: 'error',
+              title: 'Task not updated!',
+              text: 'Maybe the same task has been already exist',
+              footer: `Status code: ${error.response.status}`,
+            })
             break;
           case 422:
-            alert('Invalid symbols in request. Try to rewrite your task'); 	
+            Swal.fire({
+              icon: 'error',
+              title: 'Invalid symbols in the field',
+              text: 'Try to rewrite your task',
+              footer: `Status code: ${error.response.status}`,
+            })
             break;
             default:
-              alert(`Oops! Something went wrong! Status code: ${error.response.status}`)
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Something went wrong!',
+                footer: `Status code: ${error.response.status}`,
+              })
         }
       })
       setEdit(false);

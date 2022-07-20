@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./clearall_btnstyle.module.css";
 import { ClearAllButtonIcon } from "../../assets/clearAllButtonIcon";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 function ClearAll({ todo, setTodo, setCurrentPage, currentPage }) {
   const clearList = () => {
@@ -17,10 +18,20 @@ function ClearAll({ todo, setTodo, setCurrentPage, currentPage }) {
         .catch((error) => {
           switch (error.response.status) {
             case 404:
-              alert('Task not found. It seems like the task has been already deleted');	
+              Swal.fire({
+                icon: 'error',
+                title: 'Task not found',
+                text: 'It seems like the task has been already deleted or doesn\'t exist',
+                footer: `Status code: ${error.response.status}`,
+              })
               break;
               default:
-                alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops!',
+                  text: 'Something went wrong!',
+                  footer: `Status code: ${error.response.status}`,
+                })
           }
         })
     });

@@ -9,6 +9,7 @@ import { LastPage } from "../../assets/pagesNavigationIcons";
 import { FirstPage } from "../../assets/pagesNavigationIcons";
 import PaginationButtons from "./Pagination/PaginationButtons";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const TaskList = ({
   tasksCount,
@@ -18,8 +19,6 @@ const TaskList = ({
   currentPage,
   setCurrentPage,
   pagesAmount,
-  setPagesAmount,
-  MAX_NOTES,
 }) => {
   const filtersByState = {
     all: 10,
@@ -50,10 +49,20 @@ const TaskList = ({
       .catch((error) => {
         switch (error.response.status) {
           case 404:
-            alert('Task not found. It seems like the task has been already deleted');	
+            Swal.fire({
+              icon: 'error',
+              title: 'Task not found',
+              text: 'It seems like the task has been already deleted or doesn\'t exist',
+              footer: `Status code: ${error.response.status}`,
+            })
             break;
             default:
-              alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Something went wrong!',
+                footer: `Status code: ${error.response.status}`,
+              })
         }
       })
   };
@@ -79,7 +88,14 @@ const TaskList = ({
           setTodo(todo.filter((item) => !item.done));
         }
       })
-      .catch((error) => alert(`Oops! something went wrong! Status code: ${error.response.status}`))
+      .catch((error) =>{
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Something went wrong!',
+          footer: `Status code: ${error.response.status}`,
+        })
+      })
   };
 
   const todoFilter = (status) => {
@@ -135,7 +151,14 @@ const TaskList = ({
       setTasksCount(data.count);
     };
     fetchData();
-    fetchData().catch((error) => alert(`Oops! Error receiving data from the server. Try again later!  Status code: ${error.response.status}`));
+    fetchData().catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Error receiving data from the server. Try again later! ',
+        footer: `Status code: ${error.response.status}`,
+      })
+      });
   }, [currentPage, activeFilter, isAscendingSort, tasksCount]);
 
   return (

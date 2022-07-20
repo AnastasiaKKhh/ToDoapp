@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import styles from "./styles.module.css";
+import Swal from "sweetalert2";
 
 function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
   const [input, setInput] = useState("");
@@ -9,7 +10,11 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
     if (event.key === "Enter") {
       if (input) {
         if (tasksCount === 25) {
-          alert("Task limit");
+          Swal.fire({
+            icon: 'error',
+            title: 'That\'s a limit!',
+            text: 'Delete old tasks to add new one',
+          })
           return;
         }
         axios
@@ -27,18 +32,36 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
           .catch((error) => {
             switch (error.response.status) {
               case 400:
-                alert('Task not created! maybe the same task has been already exist');
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Task not created!',
+                  text: 'Maybe the same task has been already exist',
+                  footer: `Status code: ${error.response.status}`,
+                })
                 break;
               case 422:
-                alert('Invalid symbols in request. Try to rewrite your task'); 	
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Invalid symbols in the field',
+                  text: 'Try to rewrite your task',
+                  footer: `Status code: ${error.response.status}`,
+                })	
                 break;
               default:
-                alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops!',
+                  text: 'Something went wrong!',
+                  footer: `Status code: ${error.response.status}`,
+                })
             }
           })
         setInput("");
       } else {
-        alert("You can't add empty task");
+        Swal.fire({
+          icon: 'error',
+          title: 'You cant add an empty tasks',
+        })
       }
     }
   };
