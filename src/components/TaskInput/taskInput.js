@@ -18,12 +18,24 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
             done: false,
           })
           .then((res) => {
-            const result = [...todo, res.data]
+            const result = [...todo, res.data];
             if (result.length <= MAX_NOTES) {
               setTodo(result);
             }
-            setTasksCount(tasksCount + 1)
-          }).catch((e) =>console.log(e))
+            setTasksCount(tasksCount + 1);
+          })
+          .catch((error) => {
+            switch (error.response.status) {
+              case 400:
+                alert('Task not created! maybe the same task has been already exist');
+                break;
+              case 422:
+                alert('Invalid symbols in request. Try to rewrite your task'); 	
+                break;
+              default:
+                alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+            }
+          })
         setInput("");
       } else {
         alert("You can't add empty task");
