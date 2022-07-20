@@ -47,7 +47,15 @@ const TaskList = ({
         setTodo(deletedTask);
         setTasksCount(tasksCount - 1);
       })
-      .catch((e) => alert(`Error! ${e}`));
+      .catch((error) => {
+        switch (error.response.status) {
+          case 404:
+            alert('Task not found. It seems like the task has been already deleted');	
+            break;
+            default:
+              alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+        }
+      })
   };
 
   const changeTaskStatus = (uuid, done) => {
