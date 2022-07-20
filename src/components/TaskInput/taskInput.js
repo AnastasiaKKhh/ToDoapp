@@ -60,7 +60,7 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
       } else {
         Swal.fire({
           icon: 'error',
-          title: 'You cant add an empty tasks',
+          title: 'You can\'t add an empty tasks',
         })
       }
     }
