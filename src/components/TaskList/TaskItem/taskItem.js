@@ -5,6 +5,7 @@ import { DoneIcon } from "../../../assets/doneIcon";
 import axios from "axios";
 
 function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
+
   const [edit, setEdit] = useState(false);
 
   const editTodo = (title) => {
@@ -25,22 +26,33 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
         return;
       }
       axios.patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`, {
-      name: inputValue
-    }).then(() => {
-      setTodo(
-        todo.map((todoItem) => {
-          if (todoItem.uuid === uuid) {
-            const editedTask = {
-              ...todoItem,
-              name: inputValue
-            };
-            console.log(editedTask)
-            return editedTask;
-          }
-          return todoItem;
-        })
-      );
-    }).catch((e) =>alert(`Error! ${e}`))
+        name: inputValue
+      }).then(() => {
+        setTodo(
+          todo.map((todoItem) => {
+            if (todoItem.uuid === uuid) {
+              const editedTask = {
+                ...todoItem,
+                name: inputValue
+              };
+              console.log(editedTask)
+              return editedTask;
+            }
+            return todoItem;
+          })
+        );
+      }).catch((error) => {
+        switch (error.response.status) {
+          case 400:
+            alert('Task not created! maybe the same task has been already exist');
+            break;
+          case 422:
+            alert('Invalid symbols in request. Try to rewrite your task'); 	
+            break;
+            default:
+              alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+        }
+      })
       setEdit(false);
     }
   }
@@ -75,7 +87,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
         )}
       </div>
       <div className={taskStyle.left_side}>
-        <p className={taskStyle.date}>{item.createdAt.split('').slice(0,10).join('')}</p>
+        <p className={taskStyle.date}>{item.createdAt.split('').slice(0, 10).join('')}</p>
         <button
           className={taskStyle.delete_task}
           onClick={() => deleteTodo(item.uuid)}
