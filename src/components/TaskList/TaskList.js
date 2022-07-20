@@ -21,9 +21,9 @@ const TaskList = ({
   pagesAmount,
 }) => {
   const filtersByState = {
-    all: 10,
-    done: 1,
-    undone: 0,
+    all: '',
+    done: 'done',
+    undone: 'undone',
   };
 
   const [inputValue, setInputValue] = useState("");
@@ -81,10 +81,10 @@ const TaskList = ({
             return item;
           })
         );
-        if (activeFilter === 1) {
+        if (activeFilter === filtersByState.done) {
           setTodo(todo.filter((item) => item.done));
         }
-        if (activeFilter === 0) {
+        if (activeFilter === filtersByState.undone) {
           setTodo(todo.filter((item) => !item.done));
         }
       })
@@ -136,16 +136,9 @@ const TaskList = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      let filter = "";
-      if (activeFilter === 1) {
-        filter = "done";
-      }
-      if (activeFilter === 0) {
-        filter = "undone";
-      }
 
       const { data } = await axios.get(
-        `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${filter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
+        `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${activeFilter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
       );
       setTodo(data.tasks);
       setTasksCount(data.count);
