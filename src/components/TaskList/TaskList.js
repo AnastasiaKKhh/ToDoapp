@@ -11,7 +11,6 @@ import PaginationButtons from "./Pagination/PaginationButtons";
 import axios from "axios";
 
 const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCurrentPage, pagesAmount, setPagesAmount, MAX_NOTES }) => {
-  // const MAX_NOTES = 5;
 
   const filtersByState = {
     all: 10,
@@ -19,19 +18,10 @@ const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCu
     undone: 0,
   }
 
-  // const countPages = (todosArray) => Math.ceil(todosArray.length / MAX_NOTES) || 1;
   const [inputValue, setInputValue] = useState('');
-
-  // const [filtered, setFiltered] = useState([]);
   const [activeFilter, setActiveFilter] = useState(filtersByState.all);
-
-  // const [currentPage, setCurrentPage] = useState(1);
-  const lastTaskIndex = currentPage * MAX_NOTES;
-  const firstTaskIndex = lastTaskIndex - MAX_NOTES;
-  // const [pagesAmount, setPagesAmount] = useState(countPages(todo));
   const [isAscendingSort, setAscendingSort] = useState(true);
-  // const shownTasks = [...filtered].sort((prev, next) =>
-  //   !isAscendingSort ? prev.id - next.id : next.id - prev.id)
+
 
   const dateSort = () => {
     setAscendingSort(!isAscendingSort);
@@ -62,6 +52,12 @@ const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCu
           return item;
         })
       );
+      if (activeFilter === 1) {
+        setTodo(todo.filter((item) => item.done));
+      }
+      if (activeFilter === 0) {
+        setTodo(todo.filter((item) => !item.done));
+      }
     }).catch((e) =>console.log(`Error! ${e}`))
   };
 
@@ -112,39 +108,6 @@ const TaskList = ({ tasksCount, setTasksCount, todo, setTodo, currentPage, setCu
       setCurrentPage(currentPage - 1 || 1);
     }
   }, [pagesAmount]);
-
-  // useEffect(() => {
-  //   switch (activeFilter) {
-  //     case filtersByState.done:
-  //       setTodo(todo.filter((item) => item.done));
-
-  //       break;
-
-  //     case filtersByState.undone:
-  //       setTodo(todo.filter((item) => !item.done));
-  //       break;
-
-  //     default:
-  //       setTodo(todo);
-  //       break;
-  //   }
-  // }, [activeFilter, todo]);
-
-// function rerender () {
-//   switch (activeFilter) {
-//     case filtersByState.done:
-//       setTodo(todo.filter((item) => item.done));
-//       break;
-
-//     case filtersByState.undone:
-//       setTodo(todo.filter((item) => !item.done));
-//       break;
-
-//     default:
-//       setTodo(todo);
-//       break;
-//   }
-// }
 
   useEffect(() => {
     const fetchData = async () => {
