@@ -42,15 +42,16 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
           })
         );
       }).catch((error) => {
+        console.log(error)
         switch (error.response.status) {
           case 400:
-            alert('Task not created! maybe the same task has been already exist');
+            alert('Task not created! Maybe the same task has been already exist');
             break;
           case 422:
             alert('Invalid symbols in request. Try to rewrite your task'); 	
             break;
             default:
-              alert(`Oops! something went wrong! Status code: ${error.response.status}`)
+              alert(`Oops! Something went wrong! Status code: ${error.response.status}`)
         }
       })
       setEdit(false);
