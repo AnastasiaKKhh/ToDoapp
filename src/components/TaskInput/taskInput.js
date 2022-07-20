@@ -11,7 +11,7 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
       if (input) {
         if (tasksCount === 25) {
           Swal.fire({
-            icon: 'error',
+            icon: 'warning',
             title: 'That\'s a limit!',
             text: 'Delete old tasks to add new one',
           })
@@ -59,7 +59,7 @@ function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
         setInput("");
       } else {
         Swal.fire({
-          icon: 'error',
+          icon: 'warning',
           title: 'You can\'t add an empty tasks',
         })
       }

@@ -21,7 +21,6 @@ function App() {
           <h1>ToDo</h1>
           <TaskInput MAX_NOTES={MAX_NOTES} tasksCount={tasksCount} setTasksCount={setTasksCount} todo={todo} setTodo={setTodo} setPagesAmount={setPagesAmount} />
           <TaskList tasksCount={tasksCount} setTasksCount={setTasksCount} todo={todo} setTodo={setTodo} currentPage={currentPage} setCurrentPage={setCurrentPage} pagesAmount={pagesAmount} />
-
         </div>
       </div>
     </div>

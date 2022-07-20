@@ -19,6 +19,7 @@ const TaskList = ({
   currentPage,
   setCurrentPage,
   pagesAmount,
+
 }) => {
   const filtersByState = {
     all: '',
@@ -67,6 +68,15 @@ const TaskList = ({
       })
   };
 
+  const fetchData = async () => {
+
+    const { data } = await axios.get(
+      `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${activeFilter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
+    );
+    setTodo(data.tasks);
+    setTasksCount(data.count);
+  };
+
   const changeTaskStatus = (uuid, done) => {
     axios
       .patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`, {
@@ -82,10 +92,10 @@ const TaskList = ({
           })
         );
         if (activeFilter === filtersByState.done) {
-          setTodo(todo.filter((item) => item.done));
+          fetchData();
         }
         if (activeFilter === filtersByState.undone) {
-          setTodo(todo.filter((item) => !item.done));
+          fetchData();
         }
       })
       .catch((error) =>{
@@ -135,14 +145,6 @@ const TaskList = ({
   }, [pagesAmount]);
 
   useEffect(() => {
-    const fetchData = async () => {
-
-      const { data } = await axios.get(
-        `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${activeFilter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
-      );
-      setTodo(data.tasks);
-      setTasksCount(data.count);
-    };
     fetchData();
     fetchData().catch((error) => {
       Swal.fire({
