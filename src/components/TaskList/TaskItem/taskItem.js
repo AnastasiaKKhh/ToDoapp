@@ -13,7 +13,7 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
 
   const saveTodo = (event, uuid) => {
     if (event.key === "Escape") {
-      setEdit(false);
+      setEdit(null);
       return;
     } else {
       if (event.key !== "Enter") {
@@ -61,7 +61,7 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
             })
         }
       })
-      setEdit(false);
+      setEdit(null);
     }
   }
 
