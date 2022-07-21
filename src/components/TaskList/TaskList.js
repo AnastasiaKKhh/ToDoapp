@@ -30,7 +30,12 @@ const TaskList = ({
   const [inputValue, setInputValue] = useState("");
   const [activeFilter, setActiveFilter] = useState(filtersByState.all);
   const [isAscendingSort, setAscendingSort] = useState(true);
+  const [edit, setEdit] = useState(null);
 
+  const editTodo = (value, id) => {
+    setEdit(id);
+    setInputValue(value);
+  }
   const dateSort = () => {
     setAscendingSort(!isAscendingSort);
   };
@@ -57,13 +62,13 @@ const TaskList = ({
               footer: `Status code: ${error.response.status}`,
             })
             break;
-            default:
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                text: 'Something went wrong!',
-                footer: `Status code: ${error.response.status}`,
-              })
+          default:
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops!',
+              text: 'Something went wrong!',
+              footer: `Status code: ${error.response.status}`,
+            })
         }
       })
   };
@@ -98,7 +103,7 @@ const TaskList = ({
           fetchData();
         }
       })
-      .catch((error) =>{
+      .catch((error) => {
         Swal.fire({
           icon: 'error',
           title: 'Oops!',
@@ -145,7 +150,6 @@ const TaskList = ({
   }, [pagesAmount]);
 
   useEffect(() => {
-    fetchData();
     fetchData().catch((error) => {
       Swal.fire({
         icon: 'error',
@@ -153,7 +157,7 @@ const TaskList = ({
         text: 'Error receiving data from the server. Try again later! ',
         footer: `Status code: ${error.response.status}`,
       })
-      });
+    });
   }, [currentPage, activeFilter, isAscendingSort, tasksCount]);
 
   return (
@@ -213,6 +217,9 @@ const TaskList = ({
             changeTaskStatus={changeTaskStatus}
             inputValue={inputValue}
             setInputValue={setInputValue}
+            editTodo={(value) => editTodo(value, item.uuid)}
+            setEdit={setEdit}
+            edit={edit}
           />
         ))}
       </ul>

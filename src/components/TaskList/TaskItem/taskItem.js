@@ -5,17 +5,10 @@ import { DoneIcon } from "../../../assets/doneIcon";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
-
-  const [edit, setEdit] = useState(false);
-
-  const editTodo = (title) => {
-    setEdit(true);
-    setInputValue(title);
-  }
+function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
 
   const closeOnBlur = () => {
-    setEdit(false);
+    setEdit(null);
   };
 
   const saveTodo = (event, uuid) => {
@@ -59,13 +52,13 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
               footer: `Status code: ${error.response.status}`,
             })
             break;
-            default:
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                text: 'Something went wrong!',
-                footer: `Status code: ${error.response.status}`,
-              })
+          default:
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops!',
+              text: 'Something went wrong!',
+              footer: `Status code: ${error.response.status}`,
+            })
         }
       })
       setEdit(false);
@@ -81,7 +74,7 @@ function TaskItem({ todo, setTodo, item, deleteTodo, changeTaskStatus, inputValu
         >
           <DoneIcon />
         </button>
-        {edit ? (
+        {edit === item.uuid ? (
           <div>
             <input
               autoFocus
