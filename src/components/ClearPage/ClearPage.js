@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styles from "./clearpage_btnstyle.module.css";
 import { ClearPageButtonIcon } from "../../assets/clearPageButtonIcon";
-import axios from "axios";
-import Swal from 'sweetalert2';
 import { deleteTask } from "../../api/http";
+import { defaultError, deleteError } from "../../utilis/errors";
 
 function ClearPage({ todo, setTodo, setCurrentPage, currentPage }) {
   const clearList = () => {
@@ -16,20 +15,10 @@ function ClearPage({ todo, setTodo, setCurrentPage, currentPage }) {
       .catch((error) => {
         switch (error.response.status) {
           case 404:
-            Swal.fire({
-              icon: "error",
-              title: "Task not found",
-              text: "It seems like the task has been already deleted or doesn't exist",
-              footer: `Status code: ${error.response.status}`,
-            });
+            deleteError(error.response.status);
             break;
           default:
-            Swal.fire({
-              icon: "error",
-              title: "Oops!",
-              text: "Something went wrong!",
-              footer: `Status code: ${error.response.status}`,
-            });
+            defaultError(error.response.status)
         }
       });
   };

@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import Swal from "sweetalert2";
 import { MAX_NOTES } from "../../constants/todos";
 import { postTask } from "../../api/http";
+import { defaultError, invalidSymbolsError,taskNotCreatedError } from "../../utilis/errors";
 
 function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
   const [input, setInput] = useState("");
@@ -32,28 +32,13 @@ function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
           .catch((error) => {
             switch (error.response.status) {
               case 400:
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Task not created!',
-                  text: 'Maybe the same task has been already exist',
-                  footer: `Status code: ${error.response.status}`,
-                })
+                taskNotCreatedError(error.response.status)
                 break;
               case 422:
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Invalid symbols in the field',
-                  text: 'Try to rewrite your task',
-                  footer: `Status code: ${error.response.status}`,
-                })	
+                invalidSymbolsError(error.response.status)
                 break;
               default:
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops!',
-                  text: 'Something went wrong!',
-                  footer: `Status code: ${error.response.status}`,
-                })
+                defaultError(error.response.status)
             }
           })
         setInput("");

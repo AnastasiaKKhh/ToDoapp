@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import taskStyle from "./styles.module.css";
 import { DeleteButtonIcon } from "../../../assets/deleteButtonIcon";
 import { DoneIcon } from "../../../assets/doneIcon";
-import axios from "axios";
-import Swal from "sweetalert2";
 import { changeTask } from "../../../api/http";
+import { defaultError, invalidSymbolsError, taskNotUpdatedError } from "../../../utilis/errors";
 
 function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
 
@@ -38,28 +37,13 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
       .catch((error) => {
         switch (error.response.status) {
           case 400:
-            Swal.fire({
-              icon: 'error',
-              title: 'Task not updated!',
-              text: 'Maybe the same task has been already exist',
-              footer: `Status code: ${error.response.status}`,
-            })
+            taskNotUpdatedError(error.response.status)
             break;
           case 422:
-            Swal.fire({
-              icon: 'error',
-              title: 'Invalid symbols in the field',
-              text: 'Try to rewrite your task',
-              footer: `Status code: ${error.response.status}`,
-            })
+            invalidSymbolsError(error.response.status)
             break;
           default:
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops!',
-              text: 'Something went wrong!',
-              footer: `Status code: ${error.response.status}`,
-            })
+            defaultError(error.response.status)
         }
       })
       setEdit(null);

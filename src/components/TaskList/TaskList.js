@@ -8,12 +8,11 @@ import { ArrowDown } from "../../assets/arrows";
 import { LastPage } from "../../assets/pagesNavigationIcons";
 import { FirstPage } from "../../assets/pagesNavigationIcons";
 import PaginationButtons from "./Pagination/PaginationButtons";
-import axios from "axios";
-import Swal from "sweetalert2";
 import { FILTERSBYSTATE } from "../../constants/todos";
 import { deleteTask } from "../../api/http";
 import { changeTaskProgress } from "../../api/http";
 import { getTasks } from "../../api/http";
+import { defaultError,deleteError,gettingError,changetaskStatusError } from "../../utilis/errors";
 
 const TaskList = ({
   tasksCount,
@@ -28,7 +27,7 @@ const TaskList = ({
   const [inputValue, setInputValue] = useState("");
   const [activeFilter, setActiveFilter] = useState(FILTERSBYSTATE.ALL);
   const [isAscendingSort, setIsAscendingSort] = useState(true);
-  const [edit, setEdit] = useState(null);//
+  const [edit, setEdit] = useState(null);
 
   const editTodo = (value, id) => {
     setEdit(id);
@@ -52,26 +51,15 @@ const TaskList = ({
       .catch((error) => {
         switch (error.response.status) {
           case 404:
-            Swal.fire({
-              icon: 'error',
-              title: 'Task not found',
-              text: 'It seems like the task has been already deleted or doesn\'t exist',
-              footer: `Status code: ${error.response.status}`,
-            })
+            deleteError(error.response.status)
             break;
           default:
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops!',
-              text: 'Something went wrong!',
-              footer: `Status code: ${error.response.status}`,
-            })
+            defaultError(error.response.status)
         }
       })
   };
 
   const fetchTodo = async (activeFilter, isAscendingSort, currentPage) => {
-
     const { data } = await getTasks(activeFilter, isAscendingSort, currentPage)
     setTodo(data.tasks);
     setTasksCount(data.count);
@@ -89,19 +77,16 @@ const TaskList = ({
           })
         );
         if (activeFilter === FILTERSBYSTATE.DONE) {
-          fetchTodo(activeFilter, isAscendingSort, currentPage);
+          fetchTodo(activeFilter, isAscendingSort, currentPage)
+          .catch((error)=> changetaskStatusError(error.response.status));
         }
         if (activeFilter === FILTERSBYSTATE.UNDONE) {
-          fetchTodo(activeFilter, isAscendingSort, currentPage);
+          fetchTodo(activeFilter, isAscendingSort, currentPage)
+          .catch((error)=> changetaskStatusError(error.response.status));
         }
       })
       .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops!',
-          text: 'Something went wrong!',
-          footer: `Status code: ${error.response.status}`,
-        })
+       defaultError(error.response.status)
       })
   };
 
@@ -141,13 +126,9 @@ const TaskList = ({
   }, [pagesAmount]);
 
   useEffect(() => {
-    fetchTodo(activeFilter, isAscendingSort, currentPage).catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops!',
-        text: 'Error receiving data from the server. Try again later! ',
-        footer: `Status code: ${error.response.status}`,
-      })
+    fetchTodo(activeFilter, isAscendingSort, currentPage)
+    .catch((error) => {
+      gettingError(error.response.status)
     });
   }, [currentPage, activeFilter, isAscendingSort, tasksCount]);
 
