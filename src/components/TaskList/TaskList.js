@@ -11,6 +11,9 @@ import PaginationButtons from "./Pagination/PaginationButtons";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { FILTERSBYSTATE } from "../../constants/todos";
+import { deleteTask } from "../../api/http";
+import { changeTaskProgress } from "../../api/http";
+import { getTasks } from "../../api/http";
 
 const TaskList = ({
   tasksCount,
@@ -40,8 +43,7 @@ const TaskList = ({
   };
 
   const deleteTodo = (uuid) => {
-    axios
-      .delete(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`)
+    deleteTask(uuid)
       .then(() => {
         const deletedTask = todo.filter((item) => item.uuid !== uuid);
         setTodo(deletedTask);
@@ -68,20 +70,15 @@ const TaskList = ({
       })
   };
 
-  const fetchTodo = async () => {
+  const fetchTodo = async (activeFilter, isAscendingSort, currentPage) => {
 
-    const { data } = await axios.get(
-      `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${activeFilter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
-    );
+    const { data } = await getTasks(activeFilter, isAscendingSort, currentPage)
     setTodo(data.tasks);
     setTasksCount(data.count);
   };
 
   const changeTaskStatus = (uuid, done) => {
-    axios
-      .patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`, {
-        done: !done,
-      })
+    changeTaskProgress (uuid,  done)
       .then(() => {
         setTodo(
           todo.filter((item) => {
@@ -92,10 +89,10 @@ const TaskList = ({
           })
         );
         if (activeFilter === FILTERSBYSTATE.DONE) {
-          fetchTodo();
+          fetchTodo(activeFilter, isAscendingSort, currentPage);
         }
         if (activeFilter === FILTERSBYSTATE.UNDONE) {
-          fetchTodo();
+          fetchTodo(activeFilter, isAscendingSort, currentPage);
         }
       })
       .catch((error) => {
@@ -144,7 +141,7 @@ const TaskList = ({
   }, [pagesAmount]);
 
   useEffect(() => {
-    fetchTodo().catch((error) => {
+    fetchTodo(activeFilter, isAscendingSort, currentPage).catch((error) => {
       Swal.fire({
         icon: 'error',
         title: 'Oops!',

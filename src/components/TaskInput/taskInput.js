@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styles from "./styles.module.css";
 import Swal from "sweetalert2";
 import { MAX_NOTES } from "../../constants/todos";
+import { postTask } from "../../api/http";
 
 function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
   const [input, setInput] = useState("");
@@ -20,11 +21,7 @@ function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
           })
           return;
         }
-        axios
-          .post("https://todo-api-learning.herokuapp.com/v1/task/3", {
-            name: input,
-            done: false,
-          })
+        postTask (input)
           .then((res) => {
             const result = [...todo, res.data];
             if (result.length <= MAX_NOTES) {

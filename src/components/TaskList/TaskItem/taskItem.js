@@ -4,6 +4,7 @@ import { DeleteButtonIcon } from "../../../assets/deleteButtonIcon";
 import { DoneIcon } from "../../../assets/doneIcon";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { changeTask } from "../../../api/http";
 
 function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
 
@@ -15,13 +16,12 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
     if (event.key === "Escape") {
       setEdit(null);
       return;
-    } else { //shit
+    } else { 
       if (event.key !== "Enter") {
         return;
       }
-      axios.patch(`https://todo-api-learning.herokuapp.com/v1/task/3/${uuid}`, {
-        name: inputValue
-      }).then(() => {
+      changeTask(uuid, inputValue)
+      .then(() => {
         setTodo(
           todo.map((todoItem) => {
             if (todoItem.uuid === uuid) {
@@ -34,7 +34,8 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
             return todoItem;
           })
         );
-      }).catch((error) => {
+      })
+      .catch((error) => {
         switch (error.response.status) {
           case 400:
             Swal.fire({
