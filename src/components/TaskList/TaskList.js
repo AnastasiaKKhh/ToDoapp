@@ -68,15 +68,15 @@ const TaskList = ({
   const changeTaskStatus = (uuid, done) => {
     changeTaskProgress (uuid,  done)
       .then(() => {
-        setTodo(
-          todo.filter((item) => {
-            const newItem = item;
-            if (newItem.uuid === uuid) {
-              newItem.done = !newItem.done;
-            }
+        const newTodo = todo.map((item) => {
+          if (item.uuid === uuid) {
+            const newItem = { ...item }
+            newItem.done = !newItem.done;
             return newItem;
-          })
-        );
+          }
+          return item;
+        })
+        setTodo(newTodo);
         if (activeFilter !== FILTERSBYSTATE.ALL) {
           fetchTodo(activeFilter, isAscendingSort, currentPage)
           .catch((error)=> changetaskStatusError(error.response.status));
