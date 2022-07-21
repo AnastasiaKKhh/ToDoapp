@@ -1,4 +1,4 @@
-export const ClearAllButtonIcon = ({ clsName }) => (
+export const ClearPageButtonIcon = ({ clsName }) => (
   <svg
     className={clsName}
     width="15"

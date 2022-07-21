@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import styles from "./clearall_btnstyle.module.css";
-import { ClearAllButtonIcon } from "../../assets/clearAllButtonIcon";
+import styles from "./clearpage_btnstyle.module.css";
+import { ClearPageButtonIcon } from "../../assets/clearPageButtonIcon";
 import axios from "axios";
 import Swal from 'sweetalert2';
 
-function ClearAll({ todo, setTodo, setCurrentPage, currentPage }) {
+function ClearPage({ todo, setTodo, setCurrentPage, currentPage }) {
   const clearList = () => {
     todo.forEach((element) => {
       axios
@@ -39,10 +39,10 @@ function ClearAll({ todo, setTodo, setCurrentPage, currentPage }) {
   return (
     <div>
       <button type="button" className={styles.cleanbtn} onClick={clearList}>
-        Clear this page <ClearAllButtonIcon clsName={styles.cleanbtn_icon} />
+        Clear this page <ClearPageButtonIcon clsName={styles.cleanbtn_icon} />
       </button>
     </div>
   );
 }
 
-export default ClearAll;
+export default ClearPage;

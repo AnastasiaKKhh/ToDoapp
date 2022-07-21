@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TaskItem from "./TaskItem/taskItem";
 import listStyle from "./styles.module.css";
 import filterStyle from "./filterstyle.module.css";
-import ClearAll from "../ClearAll/ClearAll";
+import ClearPage from "../ClearPage/ClearPage";
 import { ArrowUp } from "../../assets/arrows";
 import { ArrowDown } from "../../assets/arrows";
 import { LastPage } from "../../assets/pagesNavigationIcons";
@@ -10,6 +10,7 @@ import { FirstPage } from "../../assets/pagesNavigationIcons";
 import PaginationButtons from "./Pagination/PaginationButtons";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { FILTERSBYSTATE } from "../../constants/todos";
 
 const TaskList = ({
   tasksCount,
@@ -19,25 +20,19 @@ const TaskList = ({
   currentPage,
   setCurrentPage,
   pagesAmount,
-
 }) => {
-  const filtersByState = {
-    all: '',
-    done: 'done',
-    undone: 'undone',
-  };
 
   const [inputValue, setInputValue] = useState("");
-  const [activeFilter, setActiveFilter] = useState(filtersByState.all);
-  const [isAscendingSort, setAscendingSort] = useState(true);
-  const [edit, setEdit] = useState(null);
+  const [activeFilter, setActiveFilter] = useState(FILTERSBYSTATE.ALL);
+  const [isAscendingSort, setIsAscendingSort] = useState(true);
+  const [edit, setEdit] = useState(null);//
 
   const editTodo = (value, id) => {
     setEdit(id);
     setInputValue(value);
   }
   const dateSort = () => {
-    setAscendingSort(!isAscendingSort);
+    setIsAscendingSort(!isAscendingSort);
   };
 
   const changePage = (e) => {
@@ -73,7 +68,7 @@ const TaskList = ({
       })
   };
 
-  const fetchData = async () => {
+  const fetchTodo = async () => {
 
     const { data } = await axios.get(
       `https://todo-api-learning.herokuapp.com/v1/tasks/3?filterBy=${activeFilter}&order=${isAscendingSort ? "asc" : "desc"}&pp=5&page=${currentPage}`
@@ -96,11 +91,11 @@ const TaskList = ({
             return item;
           })
         );
-        if (activeFilter === filtersByState.done) {
-          fetchData();
+        if (activeFilter === FILTERSBYSTATE.DONE) {
+          fetchTodo();
         }
-        if (activeFilter === filtersByState.undone) {
-          fetchData();
+        if (activeFilter === FILTERSBYSTATE.UNDONE) {
+          fetchTodo();
         }
       })
       .catch((error) => {
@@ -115,17 +110,16 @@ const TaskList = ({
 
   const todoFilter = (status) => {
     setActiveFilter(status);
-    if (status === filtersByState.all) {
+    if (status === FILTERSBYSTATE.ALL) {
       setTodo(todo);
     } else {
       let newTodo;
-      if (status === filtersByState.done) {
+      if (status === FILTERSBYSTATE.DONE) {
         newTodo = todo.filter((item) => item.done);
-        setTodo(newTodo);
       } else {
         newTodo = todo.filter((item) => !item.done);
-        setTodo(newTodo);
       }
+      setTodo(newTodo);
     }
   };
 
@@ -150,7 +144,7 @@ const TaskList = ({
   }, [pagesAmount]);
 
   useEffect(() => {
-    fetchData().catch((error) => {
+    fetchTodo().catch((error) => {
       Swal.fire({
         icon: 'error',
         title: 'Oops!',
@@ -165,31 +159,31 @@ const TaskList = ({
       <div className={filterStyle.filters}>
         <button
           className={
-            activeFilter === filtersByState.all
+            activeFilter === FILTERSBYSTATE.ALL
               ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
               : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(filtersByState.all)}
+          onClick={() => todoFilter(FILTERSBYSTATE.ALL)}
         >
           All
         </button>
         <button
           className={
-            activeFilter === filtersByState.done
+            activeFilter === FILTERSBYSTATE.DONE
               ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
               : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(filtersByState.done)}
+          onClick={() => todoFilter(FILTERSBYSTATE.DONE)}
         >
           Done
         </button>
         <button
           className={
-            activeFilter === filtersByState.undone
+            activeFilter === FILTERSBYSTATE.UNDONE
               ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
               : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(filtersByState.undone)}
+          onClick={() => todoFilter(FILTERSBYSTATE.UNDONE)}
         >
           Undone
         </button>
@@ -241,7 +235,7 @@ const TaskList = ({
           <LastPage buttonClass={listStyle.pageNav} />
         </span>
       </div>
-      <ClearAll
+      <ClearPage
         todo={todo}
         setTodo={setTodo}
         currentPage={currentPage}

@@ -15,7 +15,7 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
     if (event.key === "Escape") {
       setEdit(null);
       return;
-    } else {
+    } else { //shit
       if (event.key !== "Enter") {
         return;
       }
@@ -99,7 +99,8 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
         <button
           className={taskStyle.delete_task}
           onClick={() => deleteTodo(item.uuid)}
-        > <DeleteButtonIcon />
+        > 
+        <DeleteButtonIcon />
         </button>
       </div>
     </li>

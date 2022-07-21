@@ -2,10 +2,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import Swal from "sweetalert2";
+import { MAX_NOTES } from "../../constants/todos";
 
-function TaskInput({ MAX_NOTES, todo, setTodo, tasksCount, setTasksCount }) {
+function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
   const [input, setInput] = useState("");
+
   const handleChange = (event) => setInput(event.target.value);
+  
   const handleInputPress = (event) => {
     if (event.key === "Enter") {
       if (input) {
