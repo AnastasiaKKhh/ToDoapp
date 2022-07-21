@@ -4,7 +4,7 @@ import TaskList from "./components/TaskList/TaskList";
 import TaskInput from "./components/TaskInput/taskInput";
 import { MAX_NOTES } from "./constants/todos";
 
-// const MAX_NOTES = 5;
+
 function App() {
   const [todo, setTodo] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +21,7 @@ function App() {
         <div className="list_body_content">
           <h1>ToDo</h1>
           <TaskInput
-            // MAX_NOTES={MAX_NOTES}
+
             tasksCount={tasksCount}
             setTasksCount={setTasksCount}
             todo={todo}
