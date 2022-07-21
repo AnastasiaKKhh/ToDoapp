@@ -70,17 +70,14 @@ const TaskList = ({
       .then(() => {
         setTodo(
           todo.filter((item) => {
-            if (item.uuid === uuid) {
-              item.done = !item.done;
+            const newItem = item;
+            if (newItem.uuid === uuid) {
+              newItem.done = !newItem.done;
             }
-            return item;
+            return newItem;
           })
         );
-        if (activeFilter === FILTERSBYSTATE.DONE) {
-          fetchTodo(activeFilter, isAscendingSort, currentPage)
-          .catch((error)=> changetaskStatusError(error.response.status));
-        }
-        if (activeFilter === FILTERSBYSTATE.UNDONE) {
+        if (activeFilter !== FILTERSBYSTATE.ALL) {
           fetchTodo(activeFilter, isAscendingSort, currentPage)
           .catch((error)=> changetaskStatusError(error.response.status));
         }
