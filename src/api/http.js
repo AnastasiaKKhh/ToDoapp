@@ -24,9 +24,10 @@ export const changeTaskProgress = (uuid, done) =>
 
 export const getTasks = (activeFilter, isAscendingSort, currentPage) =>
   axiosInstance.get(`/tasks/3`, {
-    params: { 
-        filterBy: activeFilter, 
-        order: isAscendingSort ? "asc" : "desc", 
-        pp: 5, 
-        page: currentPage },
+    params: {
+      filterBy: activeFilter,
+      order: isAscendingSort ? "asc" : "desc",
+      pp: 5,
+      page: currentPage,
+    },
   });

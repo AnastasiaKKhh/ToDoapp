@@ -3,25 +3,28 @@ import styles from "./styles.module.css";
 import Swal from "sweetalert2";
 import { MAX_NOTES } from "../../constants/todos";
 import { postTask } from "../../api/http";
-import { defaultError, invalidSymbolsError,taskNotCreatedError } from "../../utilis/errors";
+import {
+  defaultError,
+  customError,
+} from "../../utilis/errors";
 
 function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
   const [input, setInput] = useState("");
 
   const handleChange = (event) => setInput(event.target.value);
-  
+
   const handleInputPress = (event) => {
     if (event.key === "Enter") {
       if (input) {
         if (tasksCount === 25) {
           Swal.fire({
-            icon: 'warning',
-            title: 'That\'s a limit!',
-            text: 'Delete old tasks to add new one',
-          })
+            icon: "warning",
+            title: "That's a limit!",
+            text: "Delete old tasks to add new one",
+          });
           return;
         }
-        postTask (input)
+        postTask(input)
           .then((res) => {
             const result = [...todo, res.data];
             if (result.length <= MAX_NOTES) {
@@ -32,21 +35,21 @@ function TaskInput({ todo, setTodo, tasksCount, setTasksCount }) {
           .catch((error) => {
             switch (error.response.status) {
               case 400:
-                taskNotCreatedError(error.response.status)
+                customError(error.response.status, "Task not created!", "Maybe the same task has been already exist")
                 break;
               case 422:
-                invalidSymbolsError(error.response.status)
+                customError(error.response.status, "Invalid symbols in the field", "Try to rewrite your task")
                 break;
               default:
-                defaultError(error.response.status)
+                defaultError(error.response.status);
             }
-          })
+          });
         setInput("");
       } else {
         Swal.fire({
-          icon: 'warning',
-          title: 'You can\'t add an empty tasks',
-        })
+          icon: "warning",
+          title: "You can't add an empty tasks",
+        });
       }
     }
   };

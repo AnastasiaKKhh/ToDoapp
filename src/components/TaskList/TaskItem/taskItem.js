@@ -3,10 +3,23 @@ import taskStyle from "./styles.module.css";
 import { DeleteButtonIcon } from "../../../assets/deleteButtonIcon";
 import { DoneIcon } from "../../../assets/doneIcon";
 import { changeTask } from "../../../api/http";
-import { defaultError, invalidSymbolsError, taskNotUpdatedError } from "../../../utilis/errors";
+import {
+  defaultError,
+  customError,
+} from "../../../utilis/errors";
 
-function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, changeTaskStatus, inputValue, setInputValue }) {
-
+function TaskItem({
+  edit,
+  setEdit,
+  editTodo,
+  todo,
+  setTodo,
+  item,
+  deleteTodo,
+  changeTaskStatus,
+  inputValue,
+  setInputValue,
+}) {
   const closeOnBlur = () => {
     setEdit(null);
   };
@@ -15,40 +28,40 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
     if (event.key === "Escape") {
       setEdit(null);
       return;
-    } else { 
+    } else {
       if (event.key !== "Enter") {
         return;
       }
       changeTask(uuid, inputValue)
-      .then(() => {
-        setTodo(
-          todo.map((todoItem) => {
-            if (todoItem.uuid === uuid) {
-              const editedTask = {
-                ...todoItem,
-                name: inputValue
-              };
-              return editedTask;
-            }
-            return todoItem;
-          })
-        );
-      })
-      .catch((error) => {
-        switch (error.response.status) {
-          case 400:
-            taskNotUpdatedError(error.response.status)
-            break;
-          case 422:
-            invalidSymbolsError(error.response.status)
-            break;
-          default:
-            defaultError(error.response.status)
-        }
-      })
+        .then(() => {
+          setTodo(
+            todo.map((todoItem) => {
+              if (todoItem.uuid === uuid) {
+                const editedTask = {
+                  ...todoItem,
+                  name: inputValue,
+                };
+                return editedTask;
+              }
+              return todoItem;
+            })
+          );
+        })
+        .catch((error) => {
+          switch (error.response.status) {
+            case 400:
+              customError(error.response.status, "Task not updated!", "Maybe the same task has been already exist")
+              break;
+            case 422:
+              customError(error.response.status, "Invalid symbols in the field", "Try to rewrite your task")
+              break;
+            default:
+              defaultError(error.response.status);
+          }
+        });
       setEdit(null);
     }
-  }
+  };
 
   return (
     <li className={taskStyle.task_body}>
@@ -71,21 +84,20 @@ function TaskItem({ edit, setEdit, editTodo, todo, setTodo, item, deleteTodo, ch
             />
           </div>
         ) : (
-          <p
-            className={taskStyle.tasktxt}
-            onClick={() => editTodo(item.name)}
-          >
+          <p className={taskStyle.tasktxt} onClick={() => editTodo(item.name)}>
             {item.name}
           </p>
         )}
       </div>
       <div className={taskStyle.left_side}>
-        <p className={taskStyle.date}>{item.createdAt.split('').slice(0, 10).join('')}</p>
+        <p className={taskStyle.date}>
+          {item.createdAt.split("").slice(0, 10).join("")}
+        </p>
         <button
           className={taskStyle.delete_task}
           onClick={() => deleteTodo(item.uuid)}
-        > 
-        <DeleteButtonIcon />
+        >
+          <DeleteButtonIcon />
         </button>
       </div>
     </li>

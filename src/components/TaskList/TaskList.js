@@ -8,11 +8,11 @@ import { ArrowDown } from "../../assets/arrows";
 import { LastPage } from "../../assets/pagesNavigationIcons";
 import { FirstPage } from "../../assets/pagesNavigationIcons";
 import PaginationButtons from "./Pagination/PaginationButtons";
-import { FILTERSBYSTATE } from "../../constants/todos";
 import { deleteTask } from "../../api/http";
 import { changeTaskProgress } from "../../api/http";
 import { getTasks } from "../../api/http";
-import { defaultError,deleteError,gettingError,changetaskStatusError } from "../../utilis/errors";
+import { defaultError, customError } from "../../utilis/errors";
+import { FILTERS_BY_STATE } from "../../constants/todos";
 
 const TaskList = ({
   tasksCount,
@@ -25,7 +25,7 @@ const TaskList = ({
 }) => {
 
   const [inputValue, setInputValue] = useState("");
-  const [activeFilter, setActiveFilter] = useState(FILTERSBYSTATE.ALL);
+  const [activeFilter, setActiveFilter] = useState(FILTERS_BY_STATE.ALL);
   const [isAscendingSort, setIsAscendingSort] = useState(true);
   const [edit, setEdit] = useState(null);
 
@@ -51,7 +51,7 @@ const TaskList = ({
       .catch((error) => {
         switch (error.response.status) {
           case 404:
-            deleteError(error.response.status)
+            customError(error.response.status, "Task not found", "It seems like the task has been already deleted or doesn't exist")
             break;
           default:
             defaultError(error.response.status)
@@ -68,32 +68,32 @@ const TaskList = ({
   const changeTaskStatus = (uuid, done) => {
     changeTaskProgress (uuid,  done)
       .then(() => {
-        setTodo(
-          todo.filter((item) => {
-            const newItem = item;
-            if (newItem.uuid === uuid) {
-              newItem.done = !newItem.done;
-            }
+        const newTodo = todo.map((item) => {
+          if (item.uuid === uuid) {
+            const newItem = { ...item }
+            newItem.done = !newItem.done;
             return newItem;
-          })
-        );
-        if (activeFilter !== FILTERSBYSTATE.ALL) {
+          }
+          return item;
+        })
+        setTodo(newTodo);
+        if (activeFilter !== FILTERS_BY_STATE.ALL) {
           fetchTodo(activeFilter, isAscendingSort, currentPage)
-          .catch((error)=> changetaskStatusError(error.response.status));
+          .catch((error)=> defaultError(error.response.status));
         }
       })
       .catch((error) => {
-       defaultError(error.response.status)
+        defaultError(error.response.status)
       })
   };
 
   const todoFilter = (status) => {
     setActiveFilter(status);
-    if (status === FILTERSBYSTATE.ALL) {
+    if (status === FILTERS_BY_STATE.ALL) {
       setTodo(todo);
     } else {
       let newTodo;
-      if (status === FILTERSBYSTATE.DONE) {
+      if (status === FILTERS_BY_STATE.DONE) {
         newTodo = todo.filter((item) => item.done);
       } else {
         newTodo = todo.filter((item) => !item.done);
@@ -125,7 +125,7 @@ const TaskList = ({
   useEffect(() => {
     fetchTodo(activeFilter, isAscendingSort, currentPage)
     .catch((error) => {
-      gettingError(error.response.status)
+      customError(error.response.status, "Oops!", "It seems like the task has been already deleted or doesn't exist")
     });
   }, [currentPage, activeFilter, isAscendingSort, tasksCount]);
 
@@ -134,31 +134,31 @@ const TaskList = ({
       <div className={filterStyle.filters}>
         <button
           className={
-            activeFilter === FILTERSBYSTATE.ALL
+            activeFilter === FILTERS_BY_STATE.ALL
               ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
               : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(FILTERSBYSTATE.ALL)}
+          onClick={() => todoFilter(FILTERS_BY_STATE.ALL)}
         >
           All
         </button>
         <button
           className={
-            activeFilter === FILTERSBYSTATE.DONE
+            activeFilter === FILTERS_BY_STATE.DONE
               ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
               : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(FILTERSBYSTATE.DONE)}
+          onClick={() => todoFilter(FILTERS_BY_STATE.DONE)}
         >
           Done
         </button>
         <button
           className={
-            activeFilter === FILTERSBYSTATE.UNDONE
+            activeFilter === FILTERS_BY_STATE.UNDONE
               ? `${filterStyle.filters_by_state} ${filterStyle.active_filter}`
               : `${filterStyle.filters_by_state}`
           }
-          onClick={() => todoFilter(FILTERSBYSTATE.UNDONE)}
+          onClick={() => todoFilter(FILTERS_BY_STATE.UNDONE)}
         >
           Undone
         </button>

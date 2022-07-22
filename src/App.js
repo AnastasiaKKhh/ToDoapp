@@ -21,7 +21,6 @@ function App() {
         <div className="list_body_content">
           <h1>ToDo</h1>
           <TaskInput
-
             tasksCount={tasksCount}
             setTasksCount={setTasksCount}
             todo={todo}
