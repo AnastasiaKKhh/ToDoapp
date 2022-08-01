@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TaskItem from "./TaskItem/taskItem";
 import listStyle from "./styles.module.css";
 import filterStyle from "./filterstyle.module.css";
-import ClearPage from "../ClearPage/ClearPage";
+
 import { ArrowUp } from "../../assets/arrows";
 import { ArrowDown } from "../../assets/arrows";
 import { LastPage } from "../../assets/pagesNavigationIcons";
@@ -22,6 +22,7 @@ const TaskList = ({
   currentPage,
   setCurrentPage,
   pagesAmount,
+  setPagesAmount
 }) => {
 
   const [inputValue, setInputValue] = useState("");
@@ -59,10 +60,23 @@ const TaskList = ({
       })
   };
 
-  const fetchTodo = async (activeFilter, isAscendingSort, currentPage) => {
-    const { data } = await getTasks(activeFilter, isAscendingSort, currentPage)
-    setTodo(data.tasks);
-    setTasksCount(data.count);
+  // const fetchTodo = async (activeFilter, isAscendingSort, currentPage) => {
+  //   const { data } = await getTasks(activeFilter, isAscendingSort, currentPage)
+  //   console.log("FETCH TODO",data)
+  //   setTodo(data.tasks);
+  //   setTasksCount(data.count);
+  // };
+
+  const fetchTodo = (activeFilter, isAscendingSort, currentPage) => {
+     getTasks(activeFilter, isAscendingSort, currentPage)
+     .then((response)=> {
+
+      setTodo(response.data.tasks);
+      setTasksCount(response.data.count);
+
+    }).catch((error) => {
+      customError(error.response.status, "Oops!", "There is a problem with getting task")
+    });
   };
 
   const changeTaskStatus = (uuid, done) => {
@@ -78,8 +92,7 @@ const TaskList = ({
         })
         setTodo(newTodo);
         if (activeFilter !== FILTERS_BY_STATE.ALL) {
-          fetchTodo(activeFilter, isAscendingSort, currentPage)
-          .catch((error)=> defaultError(error.response.status));
+        fetchTodo(activeFilter, isAscendingSort, currentPage)
         }
       })
       .catch((error) => {
@@ -124,9 +137,6 @@ const TaskList = ({
 
   useEffect(() => {
     fetchTodo(activeFilter, isAscendingSort, currentPage)
-    .catch((error) => {
-      customError(error.response.status, "Oops!", "It seems like the task has been already deleted or doesn't exist")
-    });
   }, [currentPage, activeFilter, isAscendingSort, tasksCount]);
 
   return (
@@ -210,12 +220,6 @@ const TaskList = ({
           <LastPage buttonClass={listStyle.pageNav} />
         </span>
       </div>
-      <ClearPage
-        todo={todo}
-        setTodo={setTodo}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
     </div>
   );
 };

@@ -6,28 +6,28 @@ const axiosInstance = axios.create({
 });
 
 export const postTask = (input) =>
-  axiosInstance.post(`/task/3`, {
+  axiosInstance.post(`/todo`, {
     name: input,
   });
 
-export const deleteTask = (uuid) => axiosInstance.delete(`/task/3/${uuid}`);
+export const deleteTask = (uuid) => axiosInstance.delete(`/todo/${uuid}`);
 
 export const changeTask = (uuid, newName) =>
-  axiosInstance.patch(`/task/3/${uuid}`, {
+  axiosInstance.patch(`/todo/${uuid}`, {
     name: newName,
   });
 
 export const changeTaskProgress = (uuid, done) =>
-  axiosInstance.patch(`/task/3/${uuid}`, {
+  axiosInstance.patch(`/todo/${uuid}`, {
     done: !done,
   });
 
 export const getTasks = (activeFilter, isAscendingSort, currentPage) =>
-  axiosInstance.get(`/tasks/3`, {
+  axios.get(`${BASE_URL}/todos`, {
     params: {
       filterBy: activeFilter,
       order: isAscendingSort ? "asc" : "desc",
       pp: 5,
       page: currentPage,
     },
-  });
+  })
