@@ -35,6 +35,7 @@ function App() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             pagesAmount={pagesAmount}
+            setPagesAmount={setPagesAmount}
           />
         </div>
       </div>
