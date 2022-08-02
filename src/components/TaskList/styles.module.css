@@ -23,6 +23,11 @@
   align-items: center;
   justify-content: center;
   margin-top: 35px;
+  cursor: pointer;
+}
+
+.pagination button {
+  cursor: pointer;
 }
 
 .pagination button + button {
