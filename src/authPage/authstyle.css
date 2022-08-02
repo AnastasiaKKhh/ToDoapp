@@ -77,7 +77,7 @@ h1 {
 }
 
 .toSinUpPage {
-    margin-top: 39px;
+  margin-top: 39px;
   font-size: 14px;
   line-height: 21px;
   font-weight: 700;
@@ -87,4 +87,15 @@ h1 {
 .toSinUpPage span {
   text-decoration-line: underline;
   color: #814cc5;
+}
+
+.input_wrapper {
+  position: relative;
+}
+
+.show_pass {
+  position: absolute;
+  top: 30%;
+  left: 87%;
+  cursor: pointer;
 }
