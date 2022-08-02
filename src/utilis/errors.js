@@ -10,7 +10,7 @@ export const defaultError = (statusCode) => {
   });
 };
 
-export const customError = (statusCode, textTitle,message ) => {
+export const customError = (statusCode, textTitle, message) => {
   Swal.fire({
     icon: "error",
     title: textTitle,
