@@ -60,24 +60,16 @@ const TaskList = ({
       })
   };
 
-  const fetchTodo = async (activeFilter, isAscendingSort, currentPage) => {
-    const { data } = await getTasks(activeFilter, isAscendingSort, currentPage)
-    console.log("FETCH TODO", data)
-    setTodo(data.tasks);
-    setTasksCount(data.count);
+  const fetchTodo = (activeFilter, isAscendingSort, currentPage) => {
+    getTasks(activeFilter, isAscendingSort, currentPage)
+      .then((response) => {
+        setTodo(response.data.tasks);
+        setTasksCount(response.data.count);
+
+      }).catch((error) => {
+        customError(error.response.status, "Oops!", "There is a problem with getting task")
+      });
   };
-
-  // const fetchTodo = (activeFilter, isAscendingSort, currentPage) => {
-  //   getTasks(activeFilter, isAscendingSort, currentPage)
-  //     .then((response) => {
-  //       console.log(response)
-  //       setTodo(response.data.tasks);
-  //       setTasksCount(response.data.count);
-
-  //     }).catch((error) => {
-  //       customError(error.response.status, "Oops!", "There is a problem with getting task")
-  //     });
-  // };
 
   const changeTaskStatus = (uuid, done) => {
     changeTaskProgress(uuid, done)
