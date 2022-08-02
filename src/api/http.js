@@ -34,8 +34,6 @@ const refreshAccessToken = async () => {
     token,
   });
   window.localStorage.setItem('access', data.access)
-  window.localStorage.setItem('refresh', data.refresh)
-
   return data;
 }
 
