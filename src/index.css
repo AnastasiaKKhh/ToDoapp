@@ -26,11 +26,37 @@ h1 {
   border: 1px solid #868686;
   box-shadow: 28px 28px 50px -4px rgba(2, 12, 66, 0.1);
   border-radius: 25px;
-  padding: 38px 37px 20px;
+  padding: 38px 37px 60px;
   margin: 1% auto 0;
 }
 
 .list_body_content {
   max-width: 500px;
   margin: 0 auto;
+}
+
+.exit_button_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.exit {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 5px 15px;
+  border-radius: 3px;
+  background: #814cc5;
+  border: 0.5px solid #814cc5;
+  color: #f8f9ff;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.exit:hover {
+  background: #4c2185;
+}
+
+.leaveArrow {
+  margin-left: 10px;
 }
