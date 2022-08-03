@@ -13,8 +13,8 @@ function Main() {
   return (
     <Routes >
       <Route exact path="/" element={token ? <Navigate to="/todos" /> :  <Login />} />
-      <Route path="/login" element={token ? <Navigate to="/todos" /> : <Login />} />
-      <Route path="/reg" element={token ? <Navigate to="/todos" /> : <SignUp />} />
+      <Route path="/login" element={ <Login />} />
+      <Route path="/reg" element={ <SignUp />} />
       <Route path="/todos" element={
       <PrivateRoute 
       Component ={<App/>} />

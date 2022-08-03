@@ -10,7 +10,6 @@ import { FirstPage } from "../../assets/pagesNavigationIcons";
 import PaginationButtons from "./Pagination/PaginationButtons";
 import { deleteTask } from "../../api/http";
 import { changeTaskProgress } from "../../api/http";
-import { getTasks } from "../../api/http";
 import { defaultError, customError } from "../../utilis/errors";
 import { FILTERS_BY_STATE } from "../../constants/todos";
 
@@ -22,7 +21,7 @@ const TaskList = ({
   currentPage,
   setCurrentPage,
   pagesAmount,
-  setPagesAmount
+  fetchTodo
 }) => {
 
   const [inputValue, setInputValue] = useState("");
@@ -58,17 +57,6 @@ const TaskList = ({
             defaultError(error.response.status)
         }
       })
-  };
-
-  const fetchTodo = (activeFilter, isAscendingSort, currentPage) => {
-    getTasks(activeFilter, isAscendingSort, currentPage)
-      .then((response) => {
-        setTodo(response.data.tasks);
-        setTasksCount(response.data.count);
-
-      }).catch((error) => {
-        customError(error.response.status, "Oops!", "There is a problem with getting task")
-      });
   };
 
   const changeTaskStatus = (uuid, done) => {

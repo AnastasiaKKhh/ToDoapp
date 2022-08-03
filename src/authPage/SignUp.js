@@ -17,12 +17,7 @@ function SignUp() {
   const handleChangeLogin = (e) => {
     setLogin(e.target.value);
   };
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
-  };
+
   const changeVisibility = (e) => {
     setIsHidden(!isHidden);
   };
@@ -83,7 +78,7 @@ function SignUp() {
         />
         <div className="input_wrapper">
           <input
-            onChange={handleChangePassword}
+            onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Create password"
             className="authInput password"
@@ -101,7 +96,7 @@ function SignUp() {
         </div>
         <div className="input_wrapper">
           <input
-            onChange={handleConfirmPassword}
+            onChange={(e)=> setConfirmPassword(e.target.value)}
             required
             placeholder="Confirm password"
             className="authInput password"
